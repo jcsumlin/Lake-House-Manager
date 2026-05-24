@@ -25,8 +25,8 @@ Your required stack is a good fit:
 - Backend/database/auth: Convex
 - Tables: AG Grid
 - Monitoring: Sentry
-- Package manager: pnpm
-- Linting/style enforcement: ESLint
+- Package manager: npm
+- Linting/style enforcement: Biome
 - Mobile/PWA: first-class requirement, not an afterthought
 
 Based on current docs:

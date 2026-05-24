@@ -1,0 +1,27 @@
+{
+  "projectName": "lake-house-manager",
+  "mode": "file-router",
+  "typescript": true,
+  "packageManager": "npm",
+  "includeExamples": false,
+  "tailwind": true,
+  "addOnOptions": {},
+  "envVarValues": {
+    "CONVEX_DEPLOYMENT": "pastel-wombat-486",
+    "VITE_CONVEX_URL": "https://pastel-wombat-486.convex.cloud"
+  },
+  "git": false,
+  "install": true,
+  "routerOnly": false,
+  "version": 1,
+  "framework": "react",
+  "chosenAddOns": [
+    "biome",
+    "cloudflare",
+    "convex",
+    "sentry",
+    "form",
+    "shadcn",
+    "tanstack-query"
+  ]
+}
