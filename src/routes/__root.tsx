@@ -53,7 +53,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<head>
 				<HeadContent />
 			</head>
@@ -64,7 +64,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 						config={{ position: "bottom-right" }}
 						plugins={[
 							{ name: "Tanstack Router", render: <TanStackRouterDevtoolsPanel /> },
-							TanStackQueryDevtools,
 						]}
 					/>
 				</ConvexProvider>

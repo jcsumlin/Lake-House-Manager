@@ -12,6 +12,24 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as InviteMembershipIdRouteImport } from './routes/invite.$membershipId'
+import { Route as AppTasksIndexRouteImport } from './routes/_app/tasks/index'
+import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
+import { Route as AppMaintenanceIndexRouteImport } from './routes/_app/maintenance/index'
+import { Route as AppDocumentsIndexRouteImport } from './routes/_app/documents/index'
+import { Route as AppContactsIndexRouteImport } from './routes/_app/contacts/index'
+import { Route as AppCalendarIndexRouteImport } from './routes/_app/calendar/index'
+import { Route as AppAnnouncementsIndexRouteImport } from './routes/_app/announcements/index'
+import { Route as AppTasksTodayRouteImport } from './routes/_app/tasks/today'
+import { Route as AppTasksTemplatesRouteImport } from './routes/_app/tasks/templates'
+import { Route as AppTasksTaskIdRouteImport } from './routes/_app/tasks/$taskId'
+import { Route as AppSettingsProfileRouteImport } from './routes/_app/settings/profile'
+import { Route as AppSettingsMembersRouteImport } from './routes/_app/settings/members'
+import { Route as AppSettingsHouseRouteImport } from './routes/_app/settings/house'
+import { Route as AppMaintenanceNewRouteImport } from './routes/_app/maintenance/new'
+import { Route as AppMaintenanceIssueIdRouteImport } from './routes/_app/maintenance/$issueId'
+import { Route as AppCalendarNewRouteImport } from './routes/_app/calendar/new'
+import { Route as AppCalendarStayIdRouteImport } from './routes/_app/calendar/$stayId'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -27,32 +45,239 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const InviteMembershipIdRoute = InviteMembershipIdRouteImport.update({
+  id: '/invite/$membershipId',
+  path: '/invite/$membershipId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppTasksIndexRoute = AppTasksIndexRouteImport.update({
+  id: '/tasks/',
+  path: '/tasks/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
+  id: '/settings/',
+  path: '/settings/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMaintenanceIndexRoute = AppMaintenanceIndexRouteImport.update({
+  id: '/maintenance/',
+  path: '/maintenance/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDocumentsIndexRoute = AppDocumentsIndexRouteImport.update({
+  id: '/documents/',
+  path: '/documents/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppContactsIndexRoute = AppContactsIndexRouteImport.update({
+  id: '/contacts/',
+  path: '/contacts/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCalendarIndexRoute = AppCalendarIndexRouteImport.update({
+  id: '/calendar/',
+  path: '/calendar/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAnnouncementsIndexRoute = AppAnnouncementsIndexRouteImport.update({
+  id: '/announcements/',
+  path: '/announcements/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTasksTodayRoute = AppTasksTodayRouteImport.update({
+  id: '/tasks/today',
+  path: '/tasks/today',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTasksTemplatesRoute = AppTasksTemplatesRouteImport.update({
+  id: '/tasks/templates',
+  path: '/tasks/templates',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTasksTaskIdRoute = AppTasksTaskIdRouteImport.update({
+  id: '/tasks/$taskId',
+  path: '/tasks/$taskId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsProfileRoute = AppSettingsProfileRouteImport.update({
+  id: '/settings/profile',
+  path: '/settings/profile',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsMembersRoute = AppSettingsMembersRouteImport.update({
+  id: '/settings/members',
+  path: '/settings/members',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsHouseRoute = AppSettingsHouseRouteImport.update({
+  id: '/settings/house',
+  path: '/settings/house',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMaintenanceNewRoute = AppMaintenanceNewRouteImport.update({
+  id: '/maintenance/new',
+  path: '/maintenance/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMaintenanceIssueIdRoute = AppMaintenanceIssueIdRouteImport.update({
+  id: '/maintenance/$issueId',
+  path: '/maintenance/$issueId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCalendarNewRoute = AppCalendarNewRouteImport.update({
+  id: '/calendar/new',
+  path: '/calendar/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCalendarStayIdRoute = AppCalendarStayIdRouteImport.update({
+  id: '/calendar/$stayId',
+  path: '/calendar/$stayId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
+  '/invite/$membershipId': typeof InviteMembershipIdRoute
+  '/calendar/$stayId': typeof AppCalendarStayIdRoute
+  '/calendar/new': typeof AppCalendarNewRoute
+  '/maintenance/$issueId': typeof AppMaintenanceIssueIdRoute
+  '/maintenance/new': typeof AppMaintenanceNewRoute
+  '/settings/house': typeof AppSettingsHouseRoute
+  '/settings/members': typeof AppSettingsMembersRoute
+  '/settings/profile': typeof AppSettingsProfileRoute
+  '/tasks/$taskId': typeof AppTasksTaskIdRoute
+  '/tasks/templates': typeof AppTasksTemplatesRoute
+  '/tasks/today': typeof AppTasksTodayRoute
+  '/announcements/': typeof AppAnnouncementsIndexRoute
+  '/calendar/': typeof AppCalendarIndexRoute
+  '/contacts/': typeof AppContactsIndexRoute
+  '/documents/': typeof AppDocumentsIndexRoute
+  '/maintenance/': typeof AppMaintenanceIndexRoute
+  '/settings/': typeof AppSettingsIndexRoute
+  '/tasks/': typeof AppTasksIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/invite/$membershipId': typeof InviteMembershipIdRoute
   '/': typeof AppIndexRoute
+  '/calendar/$stayId': typeof AppCalendarStayIdRoute
+  '/calendar/new': typeof AppCalendarNewRoute
+  '/maintenance/$issueId': typeof AppMaintenanceIssueIdRoute
+  '/maintenance/new': typeof AppMaintenanceNewRoute
+  '/settings/house': typeof AppSettingsHouseRoute
+  '/settings/members': typeof AppSettingsMembersRoute
+  '/settings/profile': typeof AppSettingsProfileRoute
+  '/tasks/$taskId': typeof AppTasksTaskIdRoute
+  '/tasks/templates': typeof AppTasksTemplatesRoute
+  '/tasks/today': typeof AppTasksTodayRoute
+  '/announcements': typeof AppAnnouncementsIndexRoute
+  '/calendar': typeof AppCalendarIndexRoute
+  '/contacts': typeof AppContactsIndexRoute
+  '/documents': typeof AppDocumentsIndexRoute
+  '/maintenance': typeof AppMaintenanceIndexRoute
+  '/settings': typeof AppSettingsIndexRoute
+  '/tasks': typeof AppTasksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/invite/$membershipId': typeof InviteMembershipIdRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/calendar/$stayId': typeof AppCalendarStayIdRoute
+  '/_app/calendar/new': typeof AppCalendarNewRoute
+  '/_app/maintenance/$issueId': typeof AppMaintenanceIssueIdRoute
+  '/_app/maintenance/new': typeof AppMaintenanceNewRoute
+  '/_app/settings/house': typeof AppSettingsHouseRoute
+  '/_app/settings/members': typeof AppSettingsMembersRoute
+  '/_app/settings/profile': typeof AppSettingsProfileRoute
+  '/_app/tasks/$taskId': typeof AppTasksTaskIdRoute
+  '/_app/tasks/templates': typeof AppTasksTemplatesRoute
+  '/_app/tasks/today': typeof AppTasksTodayRoute
+  '/_app/announcements/': typeof AppAnnouncementsIndexRoute
+  '/_app/calendar/': typeof AppCalendarIndexRoute
+  '/_app/contacts/': typeof AppContactsIndexRoute
+  '/_app/documents/': typeof AppDocumentsIndexRoute
+  '/_app/maintenance/': typeof AppMaintenanceIndexRoute
+  '/_app/settings/': typeof AppSettingsIndexRoute
+  '/_app/tasks/': typeof AppTasksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/invite/$membershipId'
+    | '/calendar/$stayId'
+    | '/calendar/new'
+    | '/maintenance/$issueId'
+    | '/maintenance/new'
+    | '/settings/house'
+    | '/settings/members'
+    | '/settings/profile'
+    | '/tasks/$taskId'
+    | '/tasks/templates'
+    | '/tasks/today'
+    | '/announcements/'
+    | '/calendar/'
+    | '/contacts/'
+    | '/documents/'
+    | '/maintenance/'
+    | '/settings/'
+    | '/tasks/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/'
-  id: '__root__' | '/_app' | '/login' | '/_app/'
+  to:
+    | '/login'
+    | '/invite/$membershipId'
+    | '/'
+    | '/calendar/$stayId'
+    | '/calendar/new'
+    | '/maintenance/$issueId'
+    | '/maintenance/new'
+    | '/settings/house'
+    | '/settings/members'
+    | '/settings/profile'
+    | '/tasks/$taskId'
+    | '/tasks/templates'
+    | '/tasks/today'
+    | '/announcements'
+    | '/calendar'
+    | '/contacts'
+    | '/documents'
+    | '/maintenance'
+    | '/settings'
+    | '/tasks'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/login'
+    | '/invite/$membershipId'
+    | '/_app/'
+    | '/_app/calendar/$stayId'
+    | '/_app/calendar/new'
+    | '/_app/maintenance/$issueId'
+    | '/_app/maintenance/new'
+    | '/_app/settings/house'
+    | '/_app/settings/members'
+    | '/_app/settings/profile'
+    | '/_app/tasks/$taskId'
+    | '/_app/tasks/templates'
+    | '/_app/tasks/today'
+    | '/_app/announcements/'
+    | '/_app/calendar/'
+    | '/_app/contacts/'
+    | '/_app/documents/'
+    | '/_app/maintenance/'
+    | '/_app/settings/'
+    | '/_app/tasks/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
+  InviteMembershipIdRoute: typeof InviteMembershipIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -78,15 +303,175 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/invite/$membershipId': {
+      id: '/invite/$membershipId'
+      path: '/invite/$membershipId'
+      fullPath: '/invite/$membershipId'
+      preLoaderRoute: typeof InviteMembershipIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/tasks/': {
+      id: '/_app/tasks/'
+      path: '/tasks'
+      fullPath: '/tasks/'
+      preLoaderRoute: typeof AppTasksIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/': {
+      id: '/_app/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AppSettingsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/maintenance/': {
+      id: '/_app/maintenance/'
+      path: '/maintenance'
+      fullPath: '/maintenance/'
+      preLoaderRoute: typeof AppMaintenanceIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/documents/': {
+      id: '/_app/documents/'
+      path: '/documents'
+      fullPath: '/documents/'
+      preLoaderRoute: typeof AppDocumentsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/contacts/': {
+      id: '/_app/contacts/'
+      path: '/contacts'
+      fullPath: '/contacts/'
+      preLoaderRoute: typeof AppContactsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/calendar/': {
+      id: '/_app/calendar/'
+      path: '/calendar'
+      fullPath: '/calendar/'
+      preLoaderRoute: typeof AppCalendarIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/announcements/': {
+      id: '/_app/announcements/'
+      path: '/announcements'
+      fullPath: '/announcements/'
+      preLoaderRoute: typeof AppAnnouncementsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/tasks/today': {
+      id: '/_app/tasks/today'
+      path: '/tasks/today'
+      fullPath: '/tasks/today'
+      preLoaderRoute: typeof AppTasksTodayRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/tasks/templates': {
+      id: '/_app/tasks/templates'
+      path: '/tasks/templates'
+      fullPath: '/tasks/templates'
+      preLoaderRoute: typeof AppTasksTemplatesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/tasks/$taskId': {
+      id: '/_app/tasks/$taskId'
+      path: '/tasks/$taskId'
+      fullPath: '/tasks/$taskId'
+      preLoaderRoute: typeof AppTasksTaskIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/profile': {
+      id: '/_app/settings/profile'
+      path: '/settings/profile'
+      fullPath: '/settings/profile'
+      preLoaderRoute: typeof AppSettingsProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/members': {
+      id: '/_app/settings/members'
+      path: '/settings/members'
+      fullPath: '/settings/members'
+      preLoaderRoute: typeof AppSettingsMembersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/house': {
+      id: '/_app/settings/house'
+      path: '/settings/house'
+      fullPath: '/settings/house'
+      preLoaderRoute: typeof AppSettingsHouseRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/maintenance/new': {
+      id: '/_app/maintenance/new'
+      path: '/maintenance/new'
+      fullPath: '/maintenance/new'
+      preLoaderRoute: typeof AppMaintenanceNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/maintenance/$issueId': {
+      id: '/_app/maintenance/$issueId'
+      path: '/maintenance/$issueId'
+      fullPath: '/maintenance/$issueId'
+      preLoaderRoute: typeof AppMaintenanceIssueIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/calendar/new': {
+      id: '/_app/calendar/new'
+      path: '/calendar/new'
+      fullPath: '/calendar/new'
+      preLoaderRoute: typeof AppCalendarNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/calendar/$stayId': {
+      id: '/_app/calendar/$stayId'
+      path: '/calendar/$stayId'
+      fullPath: '/calendar/$stayId'
+      preLoaderRoute: typeof AppCalendarStayIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
+  AppCalendarStayIdRoute: typeof AppCalendarStayIdRoute
+  AppCalendarNewRoute: typeof AppCalendarNewRoute
+  AppMaintenanceIssueIdRoute: typeof AppMaintenanceIssueIdRoute
+  AppMaintenanceNewRoute: typeof AppMaintenanceNewRoute
+  AppSettingsHouseRoute: typeof AppSettingsHouseRoute
+  AppSettingsMembersRoute: typeof AppSettingsMembersRoute
+  AppSettingsProfileRoute: typeof AppSettingsProfileRoute
+  AppTasksTaskIdRoute: typeof AppTasksTaskIdRoute
+  AppTasksTemplatesRoute: typeof AppTasksTemplatesRoute
+  AppTasksTodayRoute: typeof AppTasksTodayRoute
+  AppAnnouncementsIndexRoute: typeof AppAnnouncementsIndexRoute
+  AppCalendarIndexRoute: typeof AppCalendarIndexRoute
+  AppContactsIndexRoute: typeof AppContactsIndexRoute
+  AppDocumentsIndexRoute: typeof AppDocumentsIndexRoute
+  AppMaintenanceIndexRoute: typeof AppMaintenanceIndexRoute
+  AppSettingsIndexRoute: typeof AppSettingsIndexRoute
+  AppTasksIndexRoute: typeof AppTasksIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
+  AppCalendarStayIdRoute: AppCalendarStayIdRoute,
+  AppCalendarNewRoute: AppCalendarNewRoute,
+  AppMaintenanceIssueIdRoute: AppMaintenanceIssueIdRoute,
+  AppMaintenanceNewRoute: AppMaintenanceNewRoute,
+  AppSettingsHouseRoute: AppSettingsHouseRoute,
+  AppSettingsMembersRoute: AppSettingsMembersRoute,
+  AppSettingsProfileRoute: AppSettingsProfileRoute,
+  AppTasksTaskIdRoute: AppTasksTaskIdRoute,
+  AppTasksTemplatesRoute: AppTasksTemplatesRoute,
+  AppTasksTodayRoute: AppTasksTodayRoute,
+  AppAnnouncementsIndexRoute: AppAnnouncementsIndexRoute,
+  AppCalendarIndexRoute: AppCalendarIndexRoute,
+  AppContactsIndexRoute: AppContactsIndexRoute,
+  AppDocumentsIndexRoute: AppDocumentsIndexRoute,
+  AppMaintenanceIndexRoute: AppMaintenanceIndexRoute,
+  AppSettingsIndexRoute: AppSettingsIndexRoute,
+  AppTasksIndexRoute: AppTasksIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -94,6 +479,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
+  InviteMembershipIdRoute: InviteMembershipIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

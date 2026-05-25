@@ -1,4 +1,5 @@
-import { Link, useRouterState } from "@tanstack/react-router"
+import { useAuthActions } from "@convex-dev/auth/react"
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router"
 import {
 	Bell,
 	Calendar,
@@ -41,6 +42,13 @@ const secondaryNav: NavItem[] = [
 export function AppShell({ children }: { children: ReactNode }) {
 	const [moreOpen, setMoreOpen] = useState(false)
 	const location = useRouterState({ select: (s) => s.location.pathname })
+	const { signOut } = useAuthActions()
+	const navigate = useNavigate()
+
+	async function handleSignOut() {
+		await signOut()
+		navigate({ to: "/login" })
+	}
 
 	function isActive(to: string) {
 		if (to === "/") return location === "/"
@@ -103,8 +111,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 					className="px-3 py-4 border-t"
 					style={{ borderColor: "var(--line)" }}
 				>
-					<button
-						type="button"
+					<Link
+						to="/settings/profile"
 						className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-white/40"
 						style={{ color: "var(--sea-ink-soft)" }}
 					>
@@ -115,12 +123,22 @@ export function AppShell({ children }: { children: ReactNode }) {
 								color: "white",
 							}}
 						>
-							FH
+							<Settings size={12} />
 						</span>
 						<span className="flex-1 text-left truncate font-medium" style={{ color: "var(--sea-ink)" }}>
-							Family Member
+							Account
 						</span>
-						<LogOut size={14} style={{ color: "var(--sea-ink-soft)" }} />
+					</Link>
+					<button
+						type="button"
+						onClick={handleSignOut}
+						className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-white/40 mt-1"
+						style={{ color: "var(--sea-ink-soft)" }}
+					>
+						<span className="size-7 rounded-full flex items-center justify-center shrink-0">
+							<LogOut size={13} />
+						</span>
+						<span className="font-medium">Sign out</span>
 					</button>
 				</div>
 			</aside>
@@ -269,6 +287,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 						<div className="px-4 pt-2">
 							<button
 								type="button"
+								onClick={handleSignOut}
 								className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-semibold transition-colors"
 								style={{
 									background: "rgba(255, 255, 255, 0.5)",

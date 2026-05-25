@@ -1,16 +1,24 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router"
+import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router"
+import { useConvexAuth } from "@convex-dev/auth/react"
+import { useEffect } from "react"
 import { AppShell } from "#/components/layout/AppShell"
 
 export const Route = createFileRoute("/_app")({
-	// TODO: un-comment when auth is wired up
-	// beforeLoad: async ({ context }) => {
-	//   const session = await getSession()
-	//   if (!session) throw redirect({ to: '/login' })
-	// },
 	component: AppLayout,
 })
 
 function AppLayout() {
+	const { isAuthenticated, isLoading } = useConvexAuth()
+	const navigate = useNavigate()
+
+	useEffect(() => {
+		if (!isLoading && !isAuthenticated) {
+			navigate({ to: "/login" })
+		}
+	}, [isAuthenticated, isLoading, navigate])
+
+	if (isLoading || !isAuthenticated) return null
+
 	return (
 		<AppShell>
 			<Outlet />

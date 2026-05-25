@@ -1,9 +1,13 @@
-## 1. Recommended product direction
+Absolutely — here is a rewritten version of your original plan, updated for a no-SSR architecture while keeping the same overall structure and intent.
+
+---
+
+# 1. Recommended product direction
 
 Build a private, invite-only family operations app that helps everyone answer:
 
 - Who is coming and when?
-- What needs to be done before/during/after a stay?
+- What needs to be done before, during, and after a stay?
 - What is broken, low, or missing?
 - Who paid for what?
 - Where are important documents and instructions?
@@ -14,32 +18,80 @@ The app should feel like:
 - a shared family calendar
 - a lightweight property operations hub
 - a mobile-first household companion
-- a PWA people can “install” on their phones
+- a PWA people can install on their phones
 
-## 2. Required stack and how it fits
+Because this is a private, authenticated family app, SSR is not necessary. The app should instead be optimized as a fast client-rendered experience with strong mobile usability, realtime updates, and installable PWA behavior.
 
-Your required stack is a good fit:
+---
+
+# 2. Required stack and how it fits
+
+Your required stack is still a good fit, with one important change: the frontend should now be deployed as a client-rendered app instead of an SSR app.
+
+## Recommended stack
 
 - Frontend: React + TypeScript + TanStack Start
-- Hosting/runtime: Cloudflare Workers
+- Hosting: static frontend hosting
 - Backend/database/auth: Convex
 - Tables: AG Grid
 - Monitoring: Sentry
 - Package manager: npm
 - Linting/style enforcement: Biome
-- Mobile/PWA: first-class requirement, not an afterthought
+- Mobile/PWA: first-class requirement
 
-Based on current docs:
+## How the stack fits
 
-- TanStack Start is deployable to Cloudflare Workers using `@cloudflare/vite-plugin` and `wrangler`
-- Convex works well with TanStack Start through React Query integration
-- For auth with TanStack Start SSR/server functions, Convex’s Better Auth integration is the safest choice today
-- AG Grid now favors `AgGridProvider` for shared module registration
-- Sentry supports Cloudflare workers directly via `@sentry/cloudflare`
+### TanStack Start
+Use TanStack Start for:
 
-## 3. Key product goals
+- routing
+- layouts
+- route-based code splitting
+- app shell structure
+- error boundaries
+- client-side navigation
+- PWA integration
 
-### Primary goals
+Use it as a client-rendered app framework, not as an SSR framework.
+
+### Convex
+Use Convex for:
+
+- database
+- queries and mutations
+- realtime updates
+- auth integration
+- permissions
+- backend business logic
+- audit logging
+
+Convex should be the main backend and source of truth.
+
+### AG Grid
+Use AG Grid for:
+
+- admin-heavy screens
+- dense tabular views
+- desktop and tablet workflows
+
+Do not make AG Grid the default mobile interaction model.
+
+### Sentry
+Use Sentry for:
+
+- frontend error monitoring
+- release tracking
+- route/render failures
+- production debugging
+
+### Hosting
+Because SSR is no longer required, the frontend can be deployed as static assets. Cloudflare can still be used for hosting, CDN, DNS, and optional R2 storage, but it no longer needs to be part of the page rendering path.
+
+---
+
+# 3. Key product goals
+
+## Primary goals
 
 - Make scheduling and house coordination easy
 - Reduce text-message chaos
@@ -47,7 +99,7 @@ Based on current docs:
 - Work well on phones at the lake with spotty service
 - Be simple enough that non-technical family members actually use it
 
-### Non-functional goals
+## Non-functional goals
 
 - Mobile responsive at every screen size
 - Installable as a PWA
@@ -55,9 +107,11 @@ Based on current docs:
 - Real-time updates where useful
 - Secure, invite-only access
 - Excellent error monitoring
-- Low maintenance deployment flow
+- Low-maintenance deployment flow
 
-## 4. Suggested feature set
+---
+
+# 4. Suggested feature set
 
 ## MVP features
 
@@ -76,19 +130,19 @@ Core family coordination feature.
 
 Features:
 
-- stay scheduling / reservations
+- stay scheduling and reservations
 - overlap detection
-- arrival/departure info
+- arrival and departure info
 - guest counts
 - optional notes like “bringing dog” or “need crib”
-- house events like dock install, cleaning day, family reunion
+- house events like dock install, cleaning day, or family reunion
 
 ### C. Tasks and checklists
 House operations feature.
 
 Features:
 
-- recurring opening/closing tasks
+- recurring opening and closing tasks
 - pre-arrival checklist
 - departure checklist
 - chores by stay
@@ -110,12 +164,12 @@ For repairs, recurring upkeep, and issue reporting.
 Features:
 
 - report an issue
-- categorize by area/system
+- categorize by area or system
 - priority
 - status workflow
 - photos
-- estimated/actual cost
-- assigned person/vendor
+- estimated and actual cost
+- assigned person or vendor
 - maintenance history
 
 ### E. Expenses and reimbursements
@@ -132,12 +186,12 @@ Features:
 - reimbursement status
 
 ### F. Inventory and supplies
-Useful for food, tools, cleaning supplies, boat/lake gear.
+Useful for food, tools, cleaning supplies, and lake gear.
 
 Features:
 
 - track key stocked items
-- quantity / low-stock threshold
+- quantity and low-stock threshold
 - shopping list generation
 - storage location
 
@@ -151,9 +205,9 @@ Features:
 - utility shutoff instructions
 - septic rules
 - trash day rules
-- boat/lift instructions
+- boat and lift instructions
 - vendor contacts
-- manuals, permits, insurance docs
+- manuals, permits, and insurance docs
 
 ### H. Announcements
 Simple internal communications.
@@ -162,19 +216,19 @@ Features:
 
 - post updates
 - pin important messages
-- “seen by” tracking optional
+- optional seen-by tracking
 
 ## Phase 2 features
 
-- push notifications
 - weather alerts / storm prep checklist
-- vendor portal or read-only caretaker access
+- Freeze watch alerts
 - photo gallery by trip or issue
 - occupancy analytics
 - smart reminders based on upcoming stay
 - offline write queue for limited actions
-- barcode/QR scan for inventory
-- asset management for boats, docks, golf cart, generator
+- stay checkout checklist and instructions for how to pay the maid
+- asset management for boats, docks, screened in porch, cleaning supplies
+- End of the season close up duties
 
 ## Phase 3 features
 
@@ -184,59 +238,71 @@ Features:
 - lake rulebook acknowledgement
 - contractor workflow and invoice approval
 
-## 5. User roles and permissions
+---
+
+# 5. User roles and permissions
 
 Keep permissions simple.
 
-### Roles
+## Roles
 
-#### Super Admin
+### Super Admin
 - manage settings
-- invite/remove users
+- invite and remove users
 - change roles
 - manage property configuration
 
-#### Family Admin
-- create/edit stays
-- manage tasks, maintenance, expenses, docs
+### Family Admin
+- create and edit stays
+- manage tasks, maintenance, expenses, and docs
 - view everything
 
-#### Family Member
+### Family Member
 - view all shared info
-- create tasks/issues/expenses
+- create tasks, issues, and expenses
 - edit own entries
 - complete assigned tasks
 
-#### Guest / Caretaker
+### Guest / Caretaker
 - limited access
-- only specific routes/modules
+- only specific routes and modules
 - no financial data unless explicitly granted
 
-## 6. Best auth approach with Convex
+---
 
-Because this app uses TanStack Start and Cloudflare SSR/runtime, I recommend:
+# 6. Best auth approach with Convex
+
+Because the app is now fully client-rendered, auth should be built around Convex as the source of truth.
+
+## Recommended auth approach
 
 - Convex as backend and source of truth
-- Convex + Better Auth integration for authentication
+- Convex Auth integration for authentication
 - invite-only onboarding
 - email magic link and/or email/password
-- optional Google sign-in later
 
-Why this approach:
-
-- plain Convex Auth is still maturing for SSR-heavy flows
-- Convex + Better Auth has documented TanStack Start support
-- it gives a cleaner path for authenticated SSR, loaders, and server functions
-
-### Auth flows
+## Auth flows
 
 - admin invites user by email
 - invited user creates account or signs in
-- session stored securely
-- role assigned via membership table
-- protected routes enforced in TanStack Start loaders and Convex functions
+- session is established through Convex Auth
+- role is assigned via membership table
+- protected screens are gated in the client for UX
+- actual access control is enforced in Convex queries and mutations
 
-## 7. High-level architecture
+## Important auth rule
+
+Client-side route guards are for UX only.
+
+Actual security must be enforced in Convex:
+
+- every query checks identity
+- every mutation checks membership and role
+- every read and write is property-scoped
+
+---
+
+# 7. High-level architecture
 
 ## App architecture
 
@@ -245,21 +311,18 @@ Why this approach:
   - TanStack Start routing
   - responsive pages
   - service worker
-- Cloudflare Workers
-  - SSR / server entry
-  - edge delivery
-  - route handlers
-  - optional asset/file proxying
+  - installable app shell
 - Convex
   - database
   - queries / mutations / actions
   - auth integration
   - real-time subscriptions
-- Optional Cloudflare R2
-  - documents
-  - receipts
-  - issue photos
-  - manuals
+  - permissions and audit logging
+- Optional Cloudflare
+  - static asset hosting
+  - CDN
+  - custom domain
+  - optional R2 file storage
 
 ## Recommended responsibility split
 
@@ -268,10 +331,10 @@ Use for:
 
 - routing
 - page composition
-- loaders
-- shell rendering
-- PWA manifest/service worker integration
-- edge deployment on Cloudflare
+- layouts
+- shell rendering in the browser
+- PWA manifest and service worker integration
+- route-based code splitting
 
 ### Convex
 Use for:
@@ -279,81 +342,99 @@ Use for:
 - all app data
 - permissions
 - real-time queries
-- mutations/actions
-- auth/session logic
+- mutations and actions
+- auth and session logic
 - audit logging
 
 ### Cloudflare
 Use for:
 
-- runtime hosting
-- edge delivery
-- custom domain
-- caching of static assets
+- hosting the frontend
+- caching static assets
+- custom domain and DNS
 - optional R2 file storage
-- optional Cron/Queues later
+- optional later edge utilities if needed
 
-## 8. Core modules and route map
+---
+
+# 8. Core modules and route map
 
 Suggested route structure:
 
 ```text
 src/routes/
   __root.tsx
-  index.tsx                    // dashboard
+  index.tsx                    // dashboard or redirect into app shell
   login.tsx
   invite.$token.tsx
 
-  calendar/
-    index.tsx
-    new.tsx
-    $stayId.tsx
+  app.tsx                      // authenticated shell
 
-  tasks/
-    index.tsx
-    today.tsx
-    templates.tsx
-    $taskId.tsx
+  app/
+    index.tsx                  // dashboard
 
-  maintenance/
-    index.tsx
-    new.tsx
-    $issueId.tsx
+    calendar/
+      index.tsx
+      new.tsx
+      $stayId.tsx
 
-  expenses/
-    index.tsx
-    new.tsx
-    $expenseId.tsx
+    tasks/
+      index.tsx
+      today.tsx
+      templates.tsx
+      $taskId.tsx
 
-  inventory/
-    index.tsx
-    shopping-list.tsx
-    $itemId.tsx
+    maintenance/
+      index.tsx
+      new.tsx
+      $issueId.tsx
 
-  documents/
-    index.tsx
-    $docId.tsx
+    expenses/
+      index.tsx
+      new.tsx
+      $expenseId.tsx
 
-  contacts/
-    index.tsx
+    inventory/
+      index.tsx
+      shopping-list.tsx
+      $itemId.tsx
 
-  announcements/
-    index.tsx
+    documents/
+      index.tsx
+      $docId.tsx
 
-  settings/
-    index.tsx
-    profile.tsx
-    house.tsx
-    members.tsx
+    contacts/
+      index.tsx
+
+    announcements/
+      index.tsx
+
+    settings/
+      index.tsx
+      profile.tsx
+      house.tsx
+      members.tsx
 ```
 
-## 9. Proposed data model in Convex
+## Route strategy
+
+Use public routes only for:
+
+- login
+- invite flow
+- optional offline fallback route
+
+Put the main app inside an authenticated shell.
+
+---
+
+# 9. Proposed data model in Convex
 
 Design for one house now, but keep it multi-property capable.
 
-### Core tables
+## Core tables
 
-#### users
+### users
 - auth identity fields
 - display name
 - email
@@ -361,7 +442,7 @@ Design for one house now, but keep it multi-property capable.
 - phone
 - preferences
 
-#### properties
+### properties
 - name
 - timezone
 - address
@@ -369,13 +450,13 @@ Design for one house now, but keep it multi-property capable.
 - seasonal settings
 - emergency settings
 
-#### memberships
+### memberships
 - userId
 - propertyId
 - role
 - status
 
-#### stays
+### stays
 - propertyId
 - createdBy
 - startDate
@@ -386,7 +467,7 @@ Design for one house now, but keep it multi-property capable.
 - checkInChecklistTemplateId
 - checkOutChecklistTemplateId
 
-#### calendarEvents
+### calendarEvents
 - propertyId
 - title
 - type
@@ -395,7 +476,7 @@ Design for one house now, but keep it multi-property capable.
 - linkedStayId optional
 - notes
 
-#### tasks
+### tasks
 - propertyId
 - title
 - description
@@ -408,14 +489,14 @@ Design for one house now, but keep it multi-property capable.
 - linkedMaintenanceId optional
 - recurrenceRule optional
 
-#### taskTemplates
+### taskTemplates
 - propertyId
 - name
 - category
 - checklistItems
 - seasonalTag
 
-#### maintenanceIssues
+### maintenanceIssues
 - propertyId
 - title
 - description
@@ -432,7 +513,7 @@ Design for one house now, but keep it multi-property capable.
 - openedAt
 - resolvedAt
 
-#### expenses
+### expenses
 - propertyId
 - paidBy
 - amount
@@ -443,7 +524,7 @@ Design for one house now, but keep it multi-property capable.
 - receiptFileId
 - reimbursementStatus
 
-#### inventoryItems
+### inventoryItems
 - propertyId
 - name
 - category
@@ -453,7 +534,7 @@ Design for one house now, but keep it multi-property capable.
 - lowThreshold
 - restockNeeded
 
-#### shoppingListItems
+### shoppingListItems
 - propertyId
 - name
 - quantity
@@ -461,16 +542,16 @@ Design for one house now, but keep it multi-property capable.
 - status
 - linkedInventoryItemId optional
 
-#### documents
+### documents
 - propertyId
 - title
 - category
 - description
-- fileKey / storage reference
+- fileKey or storage reference
 - visibility
 - uploadedBy
 
-#### contacts
+### contacts
 - propertyId
 - name
 - type
@@ -478,7 +559,7 @@ Design for one house now, but keep it multi-property capable.
 - email
 - notes
 
-#### announcements
+### announcements
 - propertyId
 - title
 - body
@@ -486,13 +567,13 @@ Design for one house now, but keep it multi-property capable.
 - createdBy
 - expiresAt optional
 
-#### notifications
+### notifications
 - userId
 - type
 - payload
 - readAt
 
-#### auditLogs
+### auditLogs
 - propertyId
 - actorUserId
 - entityType
@@ -501,20 +582,22 @@ Design for one house now, but keep it multi-property capable.
 - metadata
 - createdAt
 
-## 10. UX strategy: mobile-first and PWA-first
+---
 
-This is the most important part after core functionality.
+# 10. UX strategy: mobile-first and PWA-first
+
+This is still one of the most important parts of the app.
 
 ## Mobile UX principles
 
-- design for phone first, scale up to desktop
+- design for phone first, then scale up
 - bottom navigation for primary areas
 - one-thumb actions for common tasks
 - avoid dense desktop-style forms on mobile
-- make “log issue”, “mark task done”, and “view today” extremely fast
-- use cards on mobile, tables on larger screens
+- make “log issue,” “mark task done,” and “view today” extremely fast
+- use cards on mobile and tables on larger screens
 
-### Recommended mobile nav
+## Recommended mobile nav
 
 Bottom nav:
 
@@ -532,7 +615,7 @@ Bottom nav:
 - Contacts
 - Settings
 
-### Quick actions on mobile
+## Quick actions on mobile
 
 Floating or sticky action button:
 
@@ -560,19 +643,21 @@ Cache:
 - shell
 - icons
 - common static assets
-- recent dashboard data snapshot
+- recent dashboard snapshot
 - emergency info
 - house guide basics
-- last-viewed tasks/checklists
+- last-viewed tasks and checklists
 
-Do not aggressively cache sensitive/private document blobs unless explicitly intended.
+Do not aggressively cache sensitive private document blobs unless explicitly intended.
 
 ### Install UX
-- show “Install app” prompt when eligible
-- custom instructions for iPhone/iPad “Add to Home Screen”
-- first-run welcome explaining offline limitations
+- show install prompt when eligible
+- show iPhone and iPad Add to Home Screen instructions
+- explain offline limitations during onboarding
 
-## 11. AG Grid strategy
+---
+
+# 11. AG Grid strategy
 
 Use AG Grid for admin-heavy and data-dense screens only.
 
@@ -581,48 +666,47 @@ Best places to use it:
 - expenses
 - inventory
 - maintenance history
-- membership/admin lists
-- stay management on tablet/desktop
+- membership and admin lists
+- stay management on tablet and desktop
 
-### Important mobile rule
+## Important mobile rule
+
 Do not force AG Grid to be the main mobile experience for every screen.
 
 Instead:
 
-- desktop/tablet: AG Grid
-- mobile: card/list views for most cases
-- optional compact AG Grid only for simple 2–4 column tables
+- desktop and tablet: AG Grid
+- mobile: card and list views for most cases
+- optional compact AG Grid only for simple small tables
 
-### AG Grid recommendation
-Start with AG Grid Community unless you truly need Enterprise features like:
-
-- server-side row model
-- Excel export
-- advanced grouping/pivoting
-- master/detail
+## Recommendation
+Start with AG Grid Community unless you truly need Enterprise features.
 
 For a family lake house app, Community is probably enough at first.
 
-### Current AG Grid implementation note
-Use `AgGridProvider` for shared module registration, and keep module registration client-side for SSR safety.
+---
 
-## 12. Frontend architecture
+# 12. Frontend architecture
 
-## State/data pattern
+## State and data pattern
 
 Use:
 
-- TanStack Start route loaders for page-level prefetching
-- React Query integration with Convex
-- `useSuspenseQuery` for SSR-friendly data loading
-- Convex real-time updates for collaborative screens
+- TanStack Start for routes, layouts, and code splitting
+- Convex React client for app data
+- Convex subscriptions for realtime screens
+- Suspense and loading boundaries where appropriate
+- React Query only for non-Convex external APIs if needed
 
-### UI composition
+## UI composition
 
 Suggested structure:
 
 ```text
 src/
+  app/
+    providers/
+    router/
   components/
     ui/
     layout/
@@ -646,16 +730,19 @@ src/
     utils/
   routes/
   styles/
+  service-worker/
 ```
 
-### Styling
+## Styling
 I recommend:
 
 - Tailwind CSS for responsiveness and speed
 - CSS variables for theme tokens
 - a small internal component library for consistency
 
-## 13. Backend architecture in Convex
+---
+
+# 13. Backend architecture in Convex
 
 Organize Convex by domain.
 
@@ -682,117 +769,143 @@ convex/
   lib/
     auth.ts
     permissions.ts
+    membership.ts
     validation.ts
+    audit.ts
 ```
 
-### Convex rules
+## Convex rules
 
-- every query/mutation checks membership + role
-- every write logs to audit trail when useful
+- every query and mutation checks membership and role
+- every write is property-scoped
+- every important write logs to audit trail when useful
 - keep permissions centralized in shared helpers
 - use validators consistently
-- use indexes for calendar ranges, open tasks, issue status, and expenses by date/category
+- use indexes for calendar ranges, open tasks, issue status, and expenses by date and category
 
-## 14. Cloudflare deployment plan
+---
 
-Deploy TanStack Start to Cloudflare Workers.
+# 14. Deployment plan
 
-### Why Workers over Pages
-- cleaner fit for TanStack Start full-stack behavior
-- official TanStack/Cloudflare path exists
-- SSR/server entry model aligns better
+Deploy the frontend as a client-rendered static app.
 
-### Required platform setup
-- `@cloudflare/vite-plugin`
-- `wrangler`
-- `wrangler.jsonc`
-- `nodejs_compat` compatibility flag
+## Hosting approach
+
+Use static hosting for the frontend.
+
+### Good options
+- Cloudflare hosting and CDN
+- another static host if preferred
+
+If staying with Cloudflare, use it for:
+
+- static asset hosting
 - custom domain
-- preview/staging environment
-- production environment
+- CDN
+- optional R2
 
-### Suggested environments
+## Environment strategy
+
+Suggested environments:
+
 - local
 - preview
 - staging
 - production
 
-### Secrets/config
+## Secrets and config
+
 Examples:
 
 - `VITE_CONVEX_URL`
-- `VITE_CONVEX_SITE_URL`
+- `VITE_APP_ENV`
 - `SENTRY_DSN`
-- auth secrets
+- auth configuration values
 - file storage keys if using R2
 - notification provider keys if added later
 
-## 15. Sentry observability plan
+Because SSR is removed, the deployment flow is simpler:
 
-Implement both client and server monitoring.
+- deploy frontend static assets
+- deploy Convex schema and functions
+- configure environment variables
+- attach release tracking in Sentry
 
-### Client-side
+---
+
+# 15. Sentry observability plan
+
+Implement strong client-side monitoring.
+
+## Client-side
 Use Sentry in React for:
 
 - uncaught exceptions
-- route/render failures
+- route and render failures
 - error boundaries
 - user context
 - release tagging
 
-### Cloudflare worker side
-Use `@sentry/cloudflare` for:
+## Backend monitoring
+Monitor backend failures through Convex logs and any Sentry-compatible reporting you add around backend integrations and critical workflows.
 
-- SSR/server errors
-- request tracing
-- edge runtime exceptions
-- performance sampling
-
-### Sentry best practices
+## Sentry best practices
 - upload source maps
 - set environment and release
 - filter noisy browser-extension errors
 - keep trace sample rate low in production after validation
-- capture user ID/email only if acceptable for your privacy expectations
+- capture user ID or email only if acceptable for privacy expectations
 
-## 16. Security plan
+---
 
-### Access control
+# 16. Security plan
+
+## Access control
 - invite-only app
 - authenticated routes only
 - role checks in Convex, not just frontend
 - property-scoped access
 
-### Data protection
+## Data protection
 - least-privilege role model
 - audit important writes
-- do not expose receipt/document URLs directly if avoidable
+- do not expose receipt or document URLs directly if avoidable
 - secure file upload path
 - limit personally sensitive data
 
-### Session/auth
+## Session and auth
 - short-lived tokens with refresh flow from auth system
 - revoke membership access immediately
-- require re-auth for admin-sensitive actions later if needed
+- require re-auth for especially sensitive admin actions later if needed
 
-## 17. Performance plan
+## Important rule
+The frontend is not the security boundary.
 
-### Performance goals
+Convex is the security boundary.
+
+---
+
+# 17. Performance plan
+
+## Performance goals
 - good Lighthouse mobile score
 - quick dashboard render on 4G
 - minimal JS on initial routes
 - smooth task completion on phones
 
-### Tactics
+## Tactics
 - route-based code splitting
 - lazy-load AG Grid screens
-- lazy-load heavy document/file screens
-- use loader prefetch for key routes
-- compress images
-- store large files outside main DB
+- lazy-load heavy document and file screens
 - keep dashboard query small and aggregated
+- compress images
+- store large files outside the main DB
+- cache shell assets aggressively in service worker
+- prefetch likely next routes after login
 
-## 18. Accessibility plan
+---
+
+# 18. Accessibility plan
 
 Treat accessibility as baseline, especially for older family members.
 
@@ -806,46 +919,51 @@ Requirements:
 - ARIA support in custom widgets
 - screen-reader-friendly task and calendar views
 
-## 19. Recommended MVP scope
+---
+
+# 19. Recommended MVP scope
 
 If you want the best first release, build this first:
 
-### MVP release
-- auth/invite-only access
+## MVP release
+- auth and invite-only access
 - dashboard
-- stays/calendar
-- tasks/checklists
+- stays and calendar
+- tasks and checklists
 - maintenance
-- documents/house guide
+- documents and house guide
 - responsive design
 - PWA installability
+- offline fallback and cached essentials
 - Sentry
-- admin/member roles
+- admin and member roles
 
-### MVP+ release
+## MVP+ release
 - expenses
-- inventory + shopping list
+- inventory and shopping list
 - announcements
 - file uploads
 - notifications
 
-## 20. Suggested delivery phases
+---
+
+# 20. Suggested delivery phases
 
 ## Phase 0: foundation
 - repo setup
-- TanStack Start on Cloudflare
+- TanStack Start client-rendered app setup
 - Convex integration
 - auth integration
-- ESLint
+- Biome
 - Sentry
 - responsive shell
 - PWA baseline
 
 ## Phase 1: core coordination
 - dashboard
-- stays/calendar
-- tasks/checklists
-- memberships/roles
+- stays and calendar
+- tasks and checklists
+- memberships and roles
 
 ## Phase 2: operations
 - maintenance
@@ -865,107 +983,128 @@ If you want the best first release, build this first:
 - analytics
 - UX refinements
 
-## 21. Testing strategy
+---
 
-### Unit/integration
+# 21. Testing strategy
+
+## Unit and integration
 - Vitest for utilities and business logic
 - component tests for forms and role gating
 - Convex function tests for permissions and data rules
 
-### E2E
+## E2E
 - Playwright on:
   - mobile viewport
   - tablet viewport
   - desktop viewport
 
 Test flows:
+
 - invite and sign in
 - create stay
 - complete checklist
 - report maintenance issue
 - install as PWA
 - offline fallback behavior
+- role-based access checks
 
-### Quality gates
+## Quality gates
 - lint passes
 - typecheck passes
 - build passes
 - basic Lighthouse checks
 - no critical Sentry regressions after deploy
 
-## 22. CI/CD plan
+---
 
-Using pnpm and GitHub Actions:
+# 22. CI/CD plan
+
+Using npm and GitHub Actions:
 
 Pipeline:
 
-1. install with pnpm
-2. lint
+1. install with npm
+2. lint with Biome
 3. typecheck
 4. test
-5. build
-6. deploy Convex functions/schema
-7. deploy Cloudflare Worker
+5. build frontend
+6. deploy Convex functions and schema
+7. deploy static frontend
 8. attach release to Sentry
 
-## 23. ESLint and code quality plan
+---
 
-Use ESLint to enforce:
+# 23. Code quality plan
 
-- TypeScript best practices
-- import ordering
-- no unused vars
-- no unsafe `any`
-- React hooks rules
-- consistent project conventions
+Use Biome to enforce:
+
+- formatting
+- linting
+- import cleanup
+- general consistency
 
 Also recommended:
 
-- Prettier for formatting
 - strict TypeScript
 - path aliases
 - pre-commit hooks with lint-staged
+- consistent project conventions
+- avoid unsafe `any`
+- enforce React hooks correctness
 
-## 24. Biggest implementation risks and mitigations
+---
 
-### Risk 1: Auth + SSR complexity
+# 24. Biggest implementation risks and mitigations
+
+## Risk 1: auth and invite flow complexity
 Mitigation:
-- use Convex + Better Auth path
+- use Convex Auth path
 - centralize auth helpers early
-- protect loaders and server functions consistently
+- keep route gating simple
+- enforce all permissions in Convex
 
-### Risk 2: AG Grid on mobile
+## Risk 2: AG Grid on mobile
 Mitigation:
-- use cards/lists on phones
+- use cards and lists on phones
 - reserve AG Grid for wider screens and admin pages
 
-### Risk 3: PWA expectations vs actual offline capability
+## Risk 3: PWA expectations vs actual offline capability
 Mitigation:
 - clearly define what works offline
 - cache read-only essentials first
 - defer complex offline writes to later
 
-### Risk 4: Too much scope for first release
+## Risk 4: too much scope for first release
 Mitigation:
-- prioritize scheduling + tasks + maintenance + docs
-- add expenses/inventory after adoption begins
+- prioritize scheduling, tasks, maintenance, and docs
+- add expenses and inventory after adoption begins
 
-## 25. My final recommendation
+## Risk 5: bundle size growth
+Mitigation:
+- split routes aggressively
+- lazy-load AG Grid and heavy screens
+- avoid loading admin tools for all users
 
-If I were building this, I would choose this exact implementation direction:
+---
 
-- TanStack Start on Cloudflare Workers
-- Convex for data and realtime
-- Convex + Better Auth for authentication
+# 25. Final recommendation
+
+If I were building this with your updated no-SSR requirement, I would choose this exact implementation direction:
+
+- TanStack Start as a client-rendered app framework
+- Convex for data, realtime, auth, and permissions
 - mobile-first UI with bottom navigation
 - PWA from day one
 - AG Grid only for larger data-heavy screens
-- Sentry in both browser and Cloudflare worker
-- single repo with pnpm, strict TypeScript, ESLint
+- Sentry for client-side monitoring
+- static frontend deployment
+- single repo with npm, strict TypeScript, and Biome
 - MVP focused on calendar, tasks, maintenance, and documents
 
-That gives you the highest chance of shipping something the family will actually use.
+That gives you the highest chance of shipping something the family will actually use, while keeping the architecture simpler than an SSR-based setup.
 
-1. a detailed technical specification,
-2. a phased implementation roadmap with tickets,
-3. or a full starter project structure with package list, folders, and setup steps.
+If you want, I can next turn this into either:
+
+1. a polished product/engineering spec you can hand to a developer,
+2. a phased roadmap with detailed tickets,
+3. or a starter repo structure with exact packages, folders, and setup steps.

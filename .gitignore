@@ -1,4 +1,4 @@
-node_modules
+node_modules/
 .DS_Store
 dist
 dist-ssr
@@ -11,3 +11,4 @@ dist-ssr
 .vinxi
 __unconfig*
 todos.json
+.agents/

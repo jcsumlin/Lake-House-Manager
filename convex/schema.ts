@@ -1,7 +1,9 @@
+import { authTables } from "@convex-dev/auth/server"
 import { defineSchema, defineTable } from "convex/server"
 import { v } from "convex/values"
 
 export default defineSchema({
+	...authTables,
 	// --- Properties ---
 	properties: defineTable({
 		name: v.string(),
@@ -15,7 +17,7 @@ export default defineSchema({
 
 	// --- Memberships ---
 	memberships: defineTable({
-		userId: v.string(), // Better Auth user id
+		userId: v.id("users"),
 		propertyId: v.id("properties"),
 		role: v.union(
 			v.literal("super_admin"),
@@ -37,7 +39,7 @@ export default defineSchema({
 	// --- Stays ---
 	stays: defineTable({
 		propertyId: v.id("properties"),
-		createdBy: v.string(),
+		createdBy: v.id("users"),
 		startDate: v.string(), // ISO date string YYYY-MM-DD
 		endDate: v.string(),
 		status: v.union(
@@ -69,7 +71,7 @@ export default defineSchema({
 		endAt: v.number(),
 		linkedStayId: v.optional(v.id("stays")),
 		notes: v.optional(v.string()),
-		createdBy: v.string(),
+		createdBy: v.id("users"),
 	})
 		.index("by_property", ["propertyId"])
 		.index("by_property_and_start", ["propertyId", "startAt"]),
@@ -98,12 +100,12 @@ export default defineSchema({
 			v.literal("high"),
 			v.literal("urgent"),
 		),
-		assignedTo: v.optional(v.string()),
+		assignedTo: v.optional(v.id("users")),
 		dueAt: v.optional(v.number()),
 		linkedStayId: v.optional(v.id("stays")),
 		linkedMaintenanceId: v.optional(v.id("maintenanceIssues")),
 		recurrenceRule: v.optional(v.string()),
-		createdBy: v.string(),
+		createdBy: v.id("users"),
 	})
 		.index("by_property", ["propertyId"])
 		.index("by_property_and_status", ["propertyId", "status"])
@@ -162,8 +164,8 @@ export default defineSchema({
 			v.literal("resolved"),
 			v.literal("wont_fix"),
 		),
-		reportedBy: v.string(),
-		assignedTo: v.optional(v.string()),
+		reportedBy: v.id("users"),
+		assignedTo: v.optional(v.id("users")),
 		vendorId: v.optional(v.id("contacts")),
 		estimatedCost: v.optional(v.number()),
 		actualCost: v.optional(v.number()),
@@ -178,7 +180,7 @@ export default defineSchema({
 	// --- Expenses ---
 	expenses: defineTable({
 		propertyId: v.id("properties"),
-		paidBy: v.string(),
+		paidBy: v.id("users"),
 		amount: v.number(),
 		category: v.union(
 			v.literal("utilities"),
@@ -236,7 +238,7 @@ export default defineSchema({
 		propertyId: v.id("properties"),
 		name: v.string(),
 		quantity: v.optional(v.string()),
-		addedBy: v.string(),
+		addedBy: v.id("users"),
 		status: v.union(v.literal("needed"), v.literal("purchased")),
 		linkedInventoryItemId: v.optional(v.id("inventoryItems")),
 	})
@@ -260,7 +262,7 @@ export default defineSchema({
 		fileStorageId: v.optional(v.string()),
 		content: v.optional(v.string()), // inline markdown content
 		visibility: v.union(v.literal("all"), v.literal("admins")),
-		uploadedBy: v.string(),
+		uploadedBy: v.id("users"),
 	})
 		.index("by_property", ["propertyId"])
 		.index("by_property_and_category", ["propertyId", "category"]),
@@ -288,7 +290,7 @@ export default defineSchema({
 		title: v.string(),
 		body: v.string(),
 		pinned: v.boolean(),
-		createdBy: v.string(),
+		createdBy: v.id("users"),
 		expiresAt: v.optional(v.number()),
 	})
 		.index("by_property", ["propertyId"])
@@ -296,7 +298,7 @@ export default defineSchema({
 
 	// --- Notifications ---
 	notifications: defineTable({
-		userId: v.string(),
+		userId: v.id("users"),
 		propertyId: v.id("properties"),
 		type: v.string(),
 		payload: v.any(),
@@ -308,7 +310,7 @@ export default defineSchema({
 	// --- Audit Logs ---
 	auditLogs: defineTable({
 		propertyId: v.id("properties"),
-		actorUserId: v.string(),
+		actorUserId: v.id("users"),
 		entityType: v.string(),
 		entityId: v.string(),
 		action: v.string(),

@@ -1,6 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router"
+import { useAuthActions } from "@convex-dev/auth/react"
+import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import { useConvexAuth } from "@convex-dev/auth/react"
 import { ArrowRight, Loader2, Mail } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "#/components/ui/button"
 import { Input } from "#/components/ui/input"
 import { Label } from "#/components/ui/label"
@@ -13,11 +15,20 @@ type Mode = "magic" | "password"
 type Status = "idle" | "loading" | "sent" | "error"
 
 function LoginPage() {
+	const { signIn } = useAuthActions()
+	const { isAuthenticated } = useConvexAuth()
+	const navigate = useNavigate()
 	const [mode, setMode] = useState<Mode>("magic")
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [status, setStatus] = useState<Status>("idle")
 	const [errorMsg, setErrorMsg] = useState("")
+
+	useEffect(() => {
+		if (isAuthenticated) {
+			navigate({ to: "/" })
+		}
+	}, [isAuthenticated, navigate])
 
 	async function handleMagicLink(e: React.FormEvent) {
 		e.preventDefault()
@@ -25,8 +36,7 @@ function LoginPage() {
 		setStatus("loading")
 		setErrorMsg("")
 		try {
-			// TODO: wire up authClient.signIn.magicLink({ email })
-			await new Promise((r) => setTimeout(r, 900))
+			await signIn("resend-magic-link", { email })
 			setStatus("sent")
 		} catch {
 			setStatus("error")
@@ -40,8 +50,7 @@ function LoginPage() {
 		setStatus("loading")
 		setErrorMsg("")
 		try {
-			// TODO: wire up authClient.signIn.email({ email, password })
-			await new Promise((r) => setTimeout(r, 900))
+			await signIn("password", { email, password, flow: "signIn" })
 		} catch {
 			setStatus("error")
 			setErrorMsg("Incorrect email or password.")
