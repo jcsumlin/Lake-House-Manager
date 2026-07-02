@@ -10,11 +10,11 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
 			// True magic link: no email re-check needed on verification, only the token
 			authorize: undefined,
 			sendVerificationRequest: async ({ identifier: email, url }) => {
-				return console.log(`Send magic link to ${email}: ${url}`)
+				// return console.log(`Send magic link to ${email}: ${url}`)
 				const apiKey = process.env.AUTH_RESEND_KEY
 				if (!apiKey) throw new Error("AUTH_RESEND_KEY is not set")
 				const from =
-					process.env.AUTH_EMAIL_FROM ?? "Lake House Manager <noreply@yourdomain.com>"
+					process.env.AUTH_EMAIL_FROM ?? "Lake House Manager <noreply@chatsumlin.com>"
 				const res = await fetch("https://api.resend.com/emails", {
 					method: "POST",
 					headers: {

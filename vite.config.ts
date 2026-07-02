@@ -8,6 +8,21 @@ import { VitePWA } from "vite-plugin-pwa"
 
 const config = defineConfig({
 	resolve: { tsconfigPaths: true },
+	environments: {
+		// The Cloudflare worker environment is named after the wrangler worker
+		// (hyphens replaced with underscores). Its dep optimizer can't resolve
+		// TanStack Start's virtual module IDs (#tanstack-router-entry etc.)
+		// so we exclude the whole chain from pre-bundling.
+		lake_house_manager: {
+			// Only exclude start-server-core — it contains dynamic imports of
+			// virtual modules (#tanstack-router-entry etc.) that rolldown can't
+			// resolve during optimization. The broader react-start chain is kept
+			// in the optimizer so CJS deps (react, react-dom) are wrapped to ESM.
+			optimizeDeps: {
+				exclude: ["@tanstack/start-server-core"],
+			},
+		},
+	},
 	plugins: [
 		devtools(),
 		cloudflare(),

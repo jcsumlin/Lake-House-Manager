@@ -8,7 +8,6 @@ import { TanStackDevtools } from "@tanstack/react-devtools"
 import type { QueryClient } from "@tanstack/react-query"
 
 import ConvexProvider from "../integrations/convex/provider"
-import TanStackQueryDevtools from "../integrations/tanstack-query/devtools"
 import { ErrorBoundary } from "../components/layout/ErrorBoundary"
 import { NotFound } from "../components/layout/NotFound"
 

@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values"
 import { mutation, query } from "./_generated/server"
+import { internal } from "./_generated/api"
 import { logAudit, requireMembership } from "./lib/auth"
 
 export const list = query({
@@ -21,15 +22,12 @@ export const list = query({
 			q = q.filter((qf) => qf.lte(qf.field("startDate"), args.toDate!))
 		}
 		const stays = await q.take(200)
-		const staysWithUser = await Promise.all(stays.map(async (s) => {
-			const { user } = await requireMembership(ctx, args.propertyId)
-			return {
-				...s,
-				createdBy: user.name ?? "Unknown",
-			}
-		}))
-		console.log("🚀 ~ staysWithUser:", staysWithUser)
-		return staysWithUser
+		return await Promise.all(
+			stays.map(async (s) => {
+				const user = await ctx.db.get(s.createdBy)
+				return { ...s, createdByName: user?.name ?? "Unknown" }
+			}),
+		)
 	},
 })
 
@@ -94,6 +92,13 @@ export const create = mutation({
 			action: "create",
 		})
 
+		// Schedule pre-arrival reminder
+		await ctx.scheduler.runAfter(
+			0,
+			internal.smartReminders.schedulePreArrivalReminder,
+			{ stayId },
+		)
+
 		return stayId
 	},
 })
@@ -120,6 +125,17 @@ export const update = mutation({
 		)
 		await ctx.db.patch(stayId, filtered)
 
+		// If startDate changed, cancel old reminder and reschedule
+		if (args.startDate && args.startDate !== stay.startDate && stay.scheduledReminderJobId) {
+			await ctx.scheduler.cancel(stay.scheduledReminderJobId)
+			await ctx.db.patch(stayId, { scheduledReminderJobId: undefined, reminderScheduledAt: undefined })
+			await ctx.scheduler.runAfter(
+				0,
+				internal.smartReminders.schedulePreArrivalReminder,
+				{ stayId },
+			)
+		}
+
 		await logAudit(ctx, {
 			propertyId: stay.propertyId,
 			actorUserId: user._id,
@@ -136,6 +152,12 @@ export const cancel = mutation({
 		const stay = await ctx.db.get(args.stayId)
 		if (!stay) throw new ConvexError("Stay not found")
 		const { user } = await requireMembership(ctx, stay.propertyId)
+
+		// Cancel any pending reminder
+		if (stay.scheduledReminderJobId) {
+			await ctx.scheduler.cancel(stay.scheduledReminderJobId)
+		}
+
 		await ctx.db.patch(args.stayId, { status: "cancelled" })
 		await logAudit(ctx, {
 			propertyId: stay.propertyId,

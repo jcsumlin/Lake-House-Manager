@@ -13,6 +13,16 @@ export default defineSchema({
 		wifiPassword: v.optional(v.string()),
 		emergencyContacts: v.optional(v.string()),
 		seasonalSettings: v.optional(v.any()),
+		// Phase 2: weather & alerts
+		weatherApiLat: v.optional(v.number()),
+		weatherApiLon: v.optional(v.number()),
+		freezeThresholdF: v.optional(v.number()),
+		weatherAlertsEnabled: v.optional(v.boolean()),
+		preArrivalReminderDays: v.optional(v.number()),
+		// Phase 2: cleaning service
+		cleaningServiceName: v.optional(v.string()),
+		cleaningServicePhone: v.optional(v.string()),
+		cleaningServiceInstructions: v.optional(v.string()),
 	}),
 
 	// --- Memberships ---
@@ -51,6 +61,14 @@ export default defineSchema({
 		notes: v.optional(v.string()),
 		checkInChecklistTemplateId: v.optional(v.id("taskTemplates")),
 		checkOutChecklistTemplateId: v.optional(v.id("taskTemplates")),
+		// Phase 2: checkout
+		checkoutCompletedAt: v.optional(v.number()),
+		checkoutNotes: v.optional(v.string()),
+		cleaningPaymentMethod: v.optional(v.string()),
+		cleaningCost: v.optional(v.number()),
+		// Phase 2: smart reminders
+		reminderScheduledAt: v.optional(v.number()),
+		scheduledReminderJobId: v.optional(v.id("_scheduled_functions")),
 	})
 		.index("by_property", ["propertyId"])
 		.index("by_property_and_start", ["propertyId", "startDate"]),
@@ -106,11 +124,23 @@ export default defineSchema({
 		linkedMaintenanceId: v.optional(v.id("maintenanceIssues")),
 		recurrenceRule: v.optional(v.string()),
 		createdBy: v.id("users"),
+		// Phase 2
+		linkedAssetId: v.optional(v.id("assets")),
+		source: v.optional(
+			v.union(
+				v.literal("manual"),
+				v.literal("template"),
+				v.literal("weather_auto"),
+				v.literal("freeze_auto"),
+				v.literal("cron_pre_arrival"),
+			),
+		),
 	})
 		.index("by_property", ["propertyId"])
 		.index("by_property_and_status", ["propertyId", "status"])
 		.index("by_stay", ["linkedStayId"])
-		.index("by_assigned", ["assignedTo"]),
+		.index("by_assigned", ["assignedTo"])
+		.index("by_property_and_source", ["propertyId", "source"]),
 
 	// --- Task Templates ---
 	taskTemplates: defineTable({
@@ -131,6 +161,7 @@ export default defineSchema({
 			}),
 		),
 		seasonalTag: v.optional(v.string()),
+		isDefault: v.optional(v.boolean()),
 	}).index("by_property", ["propertyId"]),
 
 	// --- Maintenance Issues ---
@@ -172,10 +203,13 @@ export default defineSchema({
 		photoStorageIds: v.optional(v.array(v.string())),
 		openedAt: v.number(),
 		resolvedAt: v.optional(v.number()),
+		// Phase 2
+		linkedAssetId: v.optional(v.id("assets")),
 	})
 		.index("by_property", ["propertyId"])
 		.index("by_property_and_status", ["propertyId", "status"])
-		.index("by_property_and_priority", ["propertyId", "priority"]),
+		.index("by_property_and_priority", ["propertyId", "priority"])
+		.index("by_asset", ["linkedAssetId"]),
 
 	// --- Expenses ---
 	expenses: defineTable({
@@ -316,4 +350,93 @@ export default defineSchema({
 		action: v.string(),
 		metadata: v.optional(v.any()),
 	}).index("by_property", ["propertyId"]),
+
+	// ── Phase 2 tables ────────────────────────────────────────────────────────
+
+	// --- Push Subscriptions ---
+	pushSubscriptions: defineTable({
+		userId: v.id("users"),
+		propertyId: v.id("properties"),
+		endpoint: v.string(),
+		p256dh: v.string(),
+		auth: v.string(),
+		userAgent: v.optional(v.string()),
+	})
+		.index("by_user", ["userId"])
+		.index("by_property", ["propertyId"])
+		.index("by_endpoint", ["endpoint"]),
+
+	// --- Photos ---
+	photos: defineTable({
+		propertyId: v.id("properties"),
+		storageId: v.id("_storage"),
+		uploadedBy: v.id("users"),
+		caption: v.optional(v.string()),
+		takenAt: v.optional(v.number()),
+		uploadedAt: v.number(),
+		linkedStayId: v.optional(v.id("stays")),
+		linkedMaintenanceId: v.optional(v.id("maintenanceIssues")),
+		linkedAssetId: v.optional(v.id("assets")),
+		width: v.optional(v.number()),
+		height: v.optional(v.number()),
+	})
+		.index("by_property", ["propertyId"])
+		.index("by_stay", ["linkedStayId"])
+		.index("by_maintenance", ["linkedMaintenanceId"])
+		.index("by_asset", ["linkedAssetId"])
+		.index("by_property_and_uploaded", ["propertyId", "uploadedAt"]),
+
+	// --- Assets ---
+	assets: defineTable({
+		propertyId: v.id("properties"),
+		name: v.string(),
+		category: v.union(
+			v.literal("boat"),
+			v.literal("dock"),
+			v.literal("watercraft"),
+			v.literal("porch"),
+			v.literal("cleaning_equipment"),
+			v.literal("trailer"),
+			v.literal("vehicle"),
+			v.literal("tool"),
+			v.literal("other"),
+		),
+		description: v.optional(v.string()),
+		location: v.optional(v.string()),
+		make: v.optional(v.string()),
+		model: v.optional(v.string()),
+		year: v.optional(v.number()),
+		serialNumber: v.optional(v.string()),
+		purchaseDate: v.optional(v.string()),
+		purchaseCost: v.optional(v.number()),
+		maintenanceIntervalDays: v.optional(v.number()),
+		lastMaintenanceAt: v.optional(v.number()),
+		nextMaintenanceDue: v.optional(v.number()),
+		status: v.union(
+			v.literal("active"),
+			v.literal("in_storage"),
+			v.literal("needs_service"),
+			v.literal("retired"),
+		),
+		notes: v.optional(v.string()),
+	})
+		.index("by_property", ["propertyId"])
+		.index("by_property_and_category", ["propertyId", "category"])
+		.index("by_property_and_status", ["propertyId", "status"]),
+
+	// --- Weather Alerts ---
+	weatherAlerts: defineTable({
+		propertyId: v.id("properties"),
+		type: v.union(v.literal("storm"), v.literal("freeze"), v.literal("other")),
+		headline: v.string(),
+		description: v.string(),
+		severity: v.union(v.literal("watch"), v.literal("warning"), v.literal("advisory")),
+		checkedAt: v.number(),
+		tasksBulkCreated: v.boolean(),
+		notificationSent: v.boolean(),
+		expiresAt: v.optional(v.number()),
+	})
+		.index("by_property", ["propertyId"])
+		.index("by_property_and_type", ["propertyId", "type"])
+		.index("by_property_and_checked", ["propertyId", "checkedAt"]),
 })

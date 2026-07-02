@@ -1,6 +1,6 @@
 import { ConvexError, v } from "convex/values"
 import { mutation, query } from "./_generated/server"
-import { getCurrentUser, logAudit, requireAuth } from "./lib/auth"
+import { getCurrentUser, logAudit, requireAuth, requireMembership } from "./lib/auth"
 import { getAuthUserId } from "@convex-dev/auth/server"
 
 export const get = query({
@@ -53,7 +53,7 @@ export const create = mutation({
 	handler: async (ctx, args) => {
 		await requireAuth(ctx)
 		const userId = await getAuthUserId(ctx)
-		const user = await ctx.db	
+		const user = await ctx.db
 			.query("users")
 			.filter((q) => q.eq(q.field("_id"), userId))
 			.first()
@@ -93,27 +93,19 @@ export const update = mutation({
 		wifiName: v.optional(v.string()),
 		wifiPassword: v.optional(v.string()),
 		emergencyContacts: v.optional(v.string()),
+		// Phase 2: weather & alerts
+		weatherApiLat: v.optional(v.number()),
+		weatherApiLon: v.optional(v.number()),
+		freezeThresholdF: v.optional(v.number()),
+		weatherAlertsEnabled: v.optional(v.boolean()),
+		preArrivalReminderDays: v.optional(v.number()),
+		// Phase 2: cleaning service
+		cleaningServiceName: v.optional(v.string()),
+		cleaningServicePhone: v.optional(v.string()),
+		cleaningServiceInstructions: v.optional(v.string()),
 	},
 	handler: async (ctx, args) => {
-		const identity = await requireAuth(ctx)
-		const user = await ctx.db
-			.query("users")
-			.filter((q) => q.eq(q.field("email"), identity.email))
-			.first()
-		if (!user) throw new ConvexError("User not found")
-
-		const membership = await ctx.db
-			.query("memberships")
-			.withIndex("by_user_and_property", (q) =>
-				q.eq("userId", user._id).eq("propertyId", args.propertyId),
-			)
-			.unique()
-		if (!membership || membership.status !== "active") {
-			throw new ConvexError("Not a member")
-		}
-		if (membership.role !== "super_admin" && membership.role !== "family_admin") {
-			throw new ConvexError("Insufficient permissions")
-		}
+		const { user } = await requireMembership(ctx, args.propertyId, "family_admin")
 
 		const { propertyId, ...updates } = args
 		const filtered = Object.fromEntries(

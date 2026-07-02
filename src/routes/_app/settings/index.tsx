@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router"
-import { Building2, ChevronRight, Users, User } from "lucide-react"
+import { Bell, Building2, CalendarClock, ChevronRight, CloudLightning, Users, User } from "lucide-react"
 
 export const Route = createFileRoute("/_app/settings/")({
 	component: SettingsPage,
@@ -9,6 +9,9 @@ const SECTIONS = [
 	{ to: "/settings/profile", icon: <User size={18} />, label: "Profile", description: "Your name and preferences" },
 	{ to: "/settings/house", icon: <Building2 size={18} />, label: "House settings", description: "Property name, timezone, Wi-Fi" },
 	{ to: "/settings/members", icon: <Users size={18} />, label: "Members", description: "Invite and manage family access" },
+	{ to: "/settings/notifications", icon: <Bell size={18} />, label: "Notifications", description: "Push alerts for this device" },
+	{ to: "/settings/reminders", icon: <CalendarClock size={18} />, label: "Reminders", description: "Pre-arrival task scheduling" },
+	{ to: "/settings/weather", icon: <CloudLightning size={18} />, label: "Weather & Alerts", description: "Freeze watch and storm alerts" },
 ]
 
 function SettingsPage() {

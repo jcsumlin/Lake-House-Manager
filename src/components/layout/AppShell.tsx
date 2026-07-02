@@ -1,12 +1,18 @@
 import { useAuthActions } from "@convex-dev/auth/react"
+import { useConvexQuery } from "@convex-dev/react-query"
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router"
 import {
+	Anchor,
+	BarChart2,
 	Bell,
 	Calendar,
 	CheckSquare2,
 	ChevronRight,
+	CloudLightning,
 	FileText,
 	Home,
+	Image,
+	Leaf,
 	LayoutGrid,
 	LogOut,
 	Package,
@@ -16,6 +22,9 @@ import {
 	X,
 } from "lucide-react"
 import { useState, type ReactNode } from "react"
+import { api } from "../../../convex/_generated/api"
+import { OfflineBanner } from "#/components/layout/OfflineBanner"
+import { useCurrentMember } from "#/lib/auth/useCurrentMember"
 
 interface NavItem {
 	to: string
@@ -33,6 +42,11 @@ const secondaryNav: NavItem[] = [
 	{ to: "/maintenance", label: "Maintenance", icon: <Wrench size={16} /> },
 	{ to: "/expenses", label: "Expenses", icon: <span className="text-sm font-bold">$</span> },
 	{ to: "/inventory", label: "Inventory", icon: <Package size={16} /> },
+	{ to: "/gallery", label: "Gallery", icon: <Image size={16} /> },
+	{ to: "/assets", label: "Assets", icon: <Anchor size={16} /> },
+	{ to: "/analytics", label: "Analytics", icon: <BarChart2 size={16} /> },
+	{ to: "/weather", label: "Weather", icon: <CloudLightning size={16} /> },
+	{ to: "/seasonal", label: "Seasonal", icon: <Leaf size={16} /> },
 	{ to: "/documents", label: "Documents", icon: <FileText size={16} /> },
 	{ to: "/contacts", label: "Contacts", icon: <Users size={16} /> },
 	{ to: "/announcements", label: "Announcements", icon: <Bell size={16} /> },
@@ -44,6 +58,13 @@ export function AppShell({ children }: { children: ReactNode }) {
 	const location = useRouterState({ select: (s) => s.location.pathname })
 	const { signOut } = useAuthActions()
 	const navigate = useNavigate()
+	const { property } = useCurrentMember()
+
+	const unreadNotifications = useConvexQuery(
+		api.pushNotifications.listUnread,
+		property ? { propertyId: property._id } : "skip",
+	)
+	const unreadCount = unreadNotifications?.length ?? 0
 
 	async function handleSignOut() {
 		await signOut()
@@ -161,25 +182,36 @@ export function AppShell({ children }: { children: ReactNode }) {
 						Lake House
 					</span>
 					<div className="flex items-center gap-1">
-						<button
-							type="button"
-							className="p-2 rounded-lg transition-colors hover:bg-white/40"
+						<Link
+							to="/settings/notifications"
+							className="relative p-2 rounded-lg transition-colors hover:bg-white/40"
 							style={{ color: "var(--sea-ink-soft)" }}
 						>
 							<Bell size={18} />
-						</button>
-						<button
-							type="button"
+							{unreadCount > 0 && (
+								<span
+									className="absolute top-1 right-1 size-4 rounded-full flex items-center justify-center text-[9px] font-bold"
+									style={{ background: "#c83232", color: "white" }}
+								>
+									{unreadCount > 9 ? "9+" : unreadCount}
+								</span>
+							)}
+						</Link>
+						<Link
+							to="/settings"
 							className="p-2 rounded-lg transition-colors hover:bg-white/40"
 							style={{ color: "var(--sea-ink-soft)" }}
 						>
 							<Settings size={18} />
-						</button>
+						</Link>
 					</div>
 				</header>
 
 				{/* Page content */}
-				<div className="flex-1 pb-24 md:pb-0">{children}</div>
+				<div className="flex-1 pb-24 md:pb-0">
+					<OfflineBanner />
+					{children}
+				</div>
 			</main>
 
 			{/* ── Mobile bottom nav ──────────────────────────────────────── */}

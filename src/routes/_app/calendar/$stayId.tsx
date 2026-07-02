@@ -2,12 +2,14 @@ import { useConvexMutation, useConvexQuery } from "@convex-dev/react-query"
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import { api } from "../../../../convex/_generated/api"
 import type { Id } from "../../../../convex/_generated/dataModel"
-import { ArrowLeft, CalendarDays, Loader2, Trash2, Users } from "lucide-react"
+import { ArrowLeft, CalendarDays, Camera, ClipboardCheck, Loader2, Trash2, Users } from "lucide-react"
 import { useState } from "react"
 import { Button } from "#/components/ui/button"
 import { Input } from "#/components/ui/input"
 import { Label } from "#/components/ui/label"
 import { Textarea } from "#/components/ui/textarea"
+import { PhotoUploader } from "#/components/features/PhotoUploader"
+import { CheckoutWizard } from "#/components/features/CheckoutWizard"
 
 export const Route = createFileRoute("/_app/calendar/$stayId")({
 	component: StayDetailPage,
@@ -27,6 +29,19 @@ function StayDetailPage() {
 	const [notes, setNotes] = useState("")
 	const [saving, setSaving] = useState(false)
 	const [error, setError] = useState("")
+	const [checkoutOpen, setCheckoutOpen] = useState(false)
+
+	const photos = useConvexQuery(
+		api.photos.listByStay,
+		stay ? { stayId: stayId as Id<"stays"> } : "skip",
+	)
+	const checkoutStatus = useConvexQuery(
+		api.checkout.getCheckoutStatus,
+		stay ? { stayId: stayId as Id<"stays"> } : "skip",
+	)
+
+	const todayStr = new Date().toISOString().slice(0, 10)
+	const isCheckoutEligible = stay ? stay.endDate <= todayStr && stay.status !== "cancelled" : false
 
 	function startEdit() {
 		if (!stay) return
@@ -145,6 +160,73 @@ function StayDetailPage() {
 					</div>
 				)}
 			</div>
+
+			{/* Trip Photos section */}
+			<div className="rise-in island-shell rounded-2xl p-4 mt-4" style={{ animationDelay: "80ms" }}>
+				<div className="flex items-center gap-2 mb-3">
+					<Camera size={16} style={{ color: "var(--lagoon)" }} />
+					<span className="text-sm font-semibold" style={{ color: "var(--sea-ink)" }}>Trip Photos</span>
+				</div>
+				<PhotoUploader
+					propertyId={stay.propertyId}
+					linkedStayId={stayId as Id<"stays">}
+				/>
+				{photos && photos.length > 0 && (
+					<div className="grid grid-cols-3 gap-2 mt-3">
+						{photos.map((p) => (
+							<Link
+								key={p._id}
+								to="/gallery/$photoId"
+								params={{ photoId: p._id }}
+								className="aspect-square rounded-lg overflow-hidden"
+								style={{ background: "rgba(23,58,64,0.06)" }}
+							>
+								{p.url && <img src={p.url} alt={p.caption ?? ""} className="w-full h-full object-cover" />}
+							</Link>
+						))}
+					</div>
+				)}
+			</div>
+
+			{/* Checkout section */}
+			{isCheckoutEligible && (
+				<div className="rise-in island-shell rounded-2xl p-4 mt-4" style={{ animationDelay: "120ms" }}>
+					<div className="flex items-center gap-2 mb-3">
+						<ClipboardCheck size={16} style={{ color: checkoutStatus?.checkoutCompletedAt ? "var(--palm)" : "var(--lagoon)" }} />
+						<span className="text-sm font-semibold" style={{ color: "var(--sea-ink)" }}>Checkout</span>
+					</div>
+					{checkoutStatus?.checkoutCompletedAt ? (
+						<div>
+							<p className="text-sm" style={{ color: "var(--palm)" }}>
+								Completed {new Date(checkoutStatus.checkoutCompletedAt).toLocaleDateString()}
+							</p>
+							{checkoutStatus.checkoutNotes && (
+								<p className="text-xs mt-1" style={{ color: "var(--sea-ink-soft)" }}>{checkoutStatus.checkoutNotes}</p>
+							)}
+						</div>
+					) : (
+						<div>
+							<p className="text-xs mb-3" style={{ color: "var(--sea-ink-soft)" }}>
+								Generate a checkout checklist and log the cleaning payment.
+							</p>
+							<Button
+								size="sm"
+								onClick={() => setCheckoutOpen(true)}
+								style={{ background: "var(--lagoon)", color: "white", border: "none" }}
+							>
+								Start Checkout
+							</Button>
+						</div>
+					)}
+				</div>
+			)}
+
+			{checkoutOpen && (
+				<CheckoutWizard
+					stayId={stayId as Id<"stays">}
+					onClose={() => setCheckoutOpen(false)}
+				/>
+			)}
 		</div>
 	)
 }

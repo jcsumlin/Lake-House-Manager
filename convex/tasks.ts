@@ -1,5 +1,5 @@
 import { ConvexError, v } from "convex/values"
-import { mutation, query } from "./_generated/server"
+import { internalMutation, mutation, query } from "./_generated/server"
 import { logAudit, requireMembership } from "./lib/auth"
 
 export const list = query({
@@ -190,6 +190,70 @@ export const remove = mutation({
 			entityType: "task",
 			entityId: args.taskId,
 			action: "delete",
+		})
+	},
+})
+
+// Internal mutations called by offline HTTP endpoints
+export const completeOffline = internalMutation({
+	args: { taskId: v.id("tasks") },
+	handler: async (ctx, args) => {
+		const task = await ctx.db.get(args.taskId)
+		if (task) await ctx.db.patch(args.taskId, { status: "done" })
+	},
+})
+
+export const addShoppingItemOffline = internalMutation({
+	args: {
+		propertyId: v.id("properties"),
+		name: v.string(),
+		quantity: v.optional(v.string()),
+	},
+	handler: async (ctx, args) => {
+		const membership = await ctx.db
+			.query("memberships")
+			.withIndex("by_property", (q) => q.eq("propertyId", args.propertyId))
+			.filter((q) => q.eq(q.field("status"), "active"))
+			.first()
+		if (!membership) return
+		await ctx.db.insert("shoppingListItems", {
+			propertyId: args.propertyId,
+			name: args.name,
+			quantity: args.quantity,
+			addedBy: membership.userId,
+			status: "needed",
+		})
+	},
+})
+
+export const reportIssueOffline = internalMutation({
+	args: {
+		propertyId: v.id("properties"),
+		title: v.string(),
+		description: v.optional(v.string()),
+		priority: v.union(
+			v.literal("low"),
+			v.literal("medium"),
+			v.literal("high"),
+			v.literal("urgent"),
+		),
+	},
+	handler: async (ctx, args) => {
+		const membership = await ctx.db
+			.query("memberships")
+			.withIndex("by_property", (q) => q.eq("propertyId", args.propertyId))
+			.filter((q) => q.eq(q.field("status"), "active"))
+			.first()
+		if (!membership) return
+		await ctx.db.insert("maintenanceIssues", {
+			propertyId: args.propertyId,
+			title: args.title,
+			description: args.description,
+			category: "other",
+			priority: args.priority,
+			status: "open",
+			reportedBy: membership.userId,
+			openedAt: Date.now(),
 		})
 	},
 })

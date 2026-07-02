@@ -3,11 +3,12 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router"
 import { api } from "../../../../convex/_generated/api"
 import type { Id } from "../../../../convex/_generated/dataModel"
 import { STATUS_LABELS } from "./index"
-import { ArrowLeft, Loader2, Trash2 } from "lucide-react"
+import { ArrowLeft, Camera, Loader2, Trash2 } from "lucide-react"
 import { useState } from "react"
 import { Button } from "#/components/ui/button"
 import { Input } from "#/components/ui/input"
 import { Label } from "#/components/ui/label"
+import { PhotoUploader } from "#/components/features/PhotoUploader"
 
 export const Route = createFileRoute("/_app/maintenance/$issueId")({
 	component: IssueDetailPage,
@@ -39,6 +40,11 @@ function IssueDetailPage() {
 
 	const [actualCost, setActualCost] = useState("")
 	const [updatingStatus, setUpdatingStatus] = useState(false)
+
+	const photos = useConvexQuery(
+		api.photos.listByMaintenance,
+		issue ? { maintenanceId: issueId as Id<"maintenanceIssues"> } : "skip",
+	)
 
 	async function handleStatusChange(status: (typeof STATUS_FLOW)[number]) {
 		setUpdatingStatus(true)
@@ -140,6 +146,35 @@ function IssueDetailPage() {
 					Reported {new Date(issue.openedAt).toLocaleDateString()}
 					{issue.resolvedAt ? ` · Resolved ${new Date(issue.resolvedAt).toLocaleDateString()}` : ""}
 				</p>
+			</div>
+
+			{/* Photos section */}
+			<div className="rise-in island-shell rounded-2xl p-4 mt-4" style={{ animationDelay: "80ms" }}>
+				<div className="flex items-center gap-2 mb-3">
+					<Camera size={16} style={{ color: "var(--lagoon)" }} />
+					<span className="text-sm font-semibold" style={{ color: "var(--sea-ink)" }}>Photos</span>
+				</div>
+				<PhotoUploader
+					propertyId={issue.propertyId}
+					linkedMaintenanceId={issueId as Id<"maintenanceIssues">}
+				/>
+				{photos && photos.length > 0 && (
+					<div className="grid grid-cols-3 gap-2 mt-3">
+						{photos.map((p) => (
+							<Link
+								key={p._id}
+								to="/gallery/$photoId"
+								params={{ photoId: p._id }}
+								className="aspect-square rounded-lg overflow-hidden"
+								style={{ background: "rgba(23,58,64,0.06)" }}
+							>
+								{p.url && (
+									<img src={p.url} alt={p.caption ?? ""} className="w-full h-full object-cover" />
+								)}
+							</Link>
+						))}
+					</div>
+				)}
 			</div>
 		</div>
 	)

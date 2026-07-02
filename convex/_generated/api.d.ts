@@ -9,10 +9,14 @@
  */
 
 import type * as admin from "../admin.js";
+import type * as analytics from "../analytics.js";
 import type * as announcements from "../announcements.js";
+import type * as assets from "../assets.js";
 import type * as auth from "../auth.js";
 import type * as calendar from "../calendar.js";
+import type * as checkout from "../checkout.js";
 import type * as contacts from "../contacts.js";
+import type * as crons from "../crons.js";
 import type * as dashboard from "../dashboard.js";
 import type * as documents from "../documents.js";
 import type * as http from "../http.js";
@@ -20,10 +24,15 @@ import type * as lib_auth from "../lib/auth.js";
 import type * as lib_permissions from "../lib/permissions.js";
 import type * as maintenance from "../maintenance.js";
 import type * as memberships from "../memberships.js";
+import type * as photos from "../photos.js";
 import type * as properties from "../properties.js";
+import type * as pushNotifications from "../pushNotifications.js";
+import type * as pushNotificationsActions from "../pushNotificationsActions.js";
+import type * as smartReminders from "../smartReminders.js";
 import type * as stays from "../stays.js";
 import type * as taskTemplates from "../taskTemplates.js";
 import type * as tasks from "../tasks.js";
+import type * as weather from "../weather.js";
 
 import type {
   ApiFromModules,
@@ -33,10 +42,14 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
+  analytics: typeof analytics;
   announcements: typeof announcements;
+  assets: typeof assets;
   auth: typeof auth;
   calendar: typeof calendar;
+  checkout: typeof checkout;
   contacts: typeof contacts;
+  crons: typeof crons;
   dashboard: typeof dashboard;
   documents: typeof documents;
   http: typeof http;
@@ -44,10 +57,15 @@ declare const fullApi: ApiFromModules<{
   "lib/permissions": typeof lib_permissions;
   maintenance: typeof maintenance;
   memberships: typeof memberships;
+  photos: typeof photos;
   properties: typeof properties;
+  pushNotifications: typeof pushNotifications;
+  pushNotificationsActions: typeof pushNotificationsActions;
+  smartReminders: typeof smartReminders;
   stays: typeof stays;
   taskTemplates: typeof taskTemplates;
   tasks: typeof tasks;
+  weather: typeof weather;
 }>;
 
 /**

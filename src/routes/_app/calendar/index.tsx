@@ -56,10 +56,10 @@ function CalendarPage() {
 		api.stays.list,
 		property
 			? {
-					propertyId: property._id,
-					fromDate: new Date(year, month, 1).toISOString().slice(0, 10),
-					toDate: new Date(year, month + 1, 0).toISOString().slice(0, 10),
-				}
+				propertyId: property._id,
+				fromDate: new Date(year, month, 1).toISOString().slice(0, 10),
+				toDate: new Date(year, month + 1, 0).toISOString().slice(0, 10),
+			}
 			: "skip",
 	)
 
@@ -165,7 +165,7 @@ function CalendarPage() {
 												color: stay.status === "confirmed" ? "var(--palm)" : "#b47800",
 											}}
 										>
-											{stay.createdBy ?? "Stay"}
+											{stay.createdByName ?? "Stay"}{stay.status === 'tentative' && ' - Tentative'}
 										</Link>
 									))}
 								</div>
@@ -188,7 +188,7 @@ function CalendarPage() {
 						>
 							<div>
 								<p className="text-sm font-semibold" style={{ color: "var(--sea-ink)" }}>
-									{stay.createdBy}
+									{stay.createdByName}'s Stay
 								</p>
 								<p className="text-xs font-semibold" style={{ color: "var(--sea-ink)" }}>
 									{stay.startDate} — {stay.endDate}

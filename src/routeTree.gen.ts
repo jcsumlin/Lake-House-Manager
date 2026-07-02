@@ -13,23 +13,35 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as InviteMembershipIdRouteImport } from './routes/invite.$membershipId'
+import { Route as AppWeatherIndexRouteImport } from './routes/_app/weather/index'
 import { Route as AppTasksIndexRouteImport } from './routes/_app/tasks/index'
 import { Route as AppSettingsIndexRouteImport } from './routes/_app/settings/index'
+import { Route as AppSeasonalIndexRouteImport } from './routes/_app/seasonal/index'
 import { Route as AppMaintenanceIndexRouteImport } from './routes/_app/maintenance/index'
+import { Route as AppGalleryIndexRouteImport } from './routes/_app/gallery/index'
 import { Route as AppDocumentsIndexRouteImport } from './routes/_app/documents/index'
 import { Route as AppContactsIndexRouteImport } from './routes/_app/contacts/index'
 import { Route as AppCalendarIndexRouteImport } from './routes/_app/calendar/index'
+import { Route as AppAssetsIndexRouteImport } from './routes/_app/assets/index'
 import { Route as AppAnnouncementsIndexRouteImport } from './routes/_app/announcements/index'
+import { Route as AppAnalyticsIndexRouteImport } from './routes/_app/analytics/index'
 import { Route as AppTasksTodayRouteImport } from './routes/_app/tasks/today'
 import { Route as AppTasksTemplatesRouteImport } from './routes/_app/tasks/templates'
 import { Route as AppTasksTaskIdRouteImport } from './routes/_app/tasks/$taskId'
+import { Route as AppSettingsWeatherRouteImport } from './routes/_app/settings/weather'
+import { Route as AppSettingsRemindersRouteImport } from './routes/_app/settings/reminders'
 import { Route as AppSettingsProfileRouteImport } from './routes/_app/settings/profile'
+import { Route as AppSettingsNotificationsRouteImport } from './routes/_app/settings/notifications'
 import { Route as AppSettingsMembersRouteImport } from './routes/_app/settings/members'
 import { Route as AppSettingsHouseRouteImport } from './routes/_app/settings/house'
+import { Route as AppSeasonalClosingRouteImport } from './routes/_app/seasonal/closing'
 import { Route as AppMaintenanceNewRouteImport } from './routes/_app/maintenance/new'
 import { Route as AppMaintenanceIssueIdRouteImport } from './routes/_app/maintenance/$issueId'
+import { Route as AppGalleryPhotoIdRouteImport } from './routes/_app/gallery/$photoId'
 import { Route as AppCalendarNewRouteImport } from './routes/_app/calendar/new'
 import { Route as AppCalendarStayIdRouteImport } from './routes/_app/calendar/$stayId'
+import { Route as AppAssetsNewRouteImport } from './routes/_app/assets/new'
+import { Route as AppAssetsAssetIdRouteImport } from './routes/_app/assets/$assetId'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -50,6 +62,11 @@ const InviteMembershipIdRoute = InviteMembershipIdRouteImport.update({
   path: '/invite/$membershipId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppWeatherIndexRoute = AppWeatherIndexRouteImport.update({
+  id: '/weather/',
+  path: '/weather/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppTasksIndexRoute = AppTasksIndexRouteImport.update({
   id: '/tasks/',
   path: '/tasks/',
@@ -60,9 +77,19 @@ const AppSettingsIndexRoute = AppSettingsIndexRouteImport.update({
   path: '/settings/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSeasonalIndexRoute = AppSeasonalIndexRouteImport.update({
+  id: '/seasonal/',
+  path: '/seasonal/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppMaintenanceIndexRoute = AppMaintenanceIndexRouteImport.update({
   id: '/maintenance/',
   path: '/maintenance/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGalleryIndexRoute = AppGalleryIndexRouteImport.update({
+  id: '/gallery/',
+  path: '/gallery/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDocumentsIndexRoute = AppDocumentsIndexRouteImport.update({
@@ -80,9 +107,19 @@ const AppCalendarIndexRoute = AppCalendarIndexRouteImport.update({
   path: '/calendar/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAssetsIndexRoute = AppAssetsIndexRouteImport.update({
+  id: '/assets/',
+  path: '/assets/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAnnouncementsIndexRoute = AppAnnouncementsIndexRouteImport.update({
   id: '/announcements/',
   path: '/announcements/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAnalyticsIndexRoute = AppAnalyticsIndexRouteImport.update({
+  id: '/analytics/',
+  path: '/analytics/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppTasksTodayRoute = AppTasksTodayRouteImport.update({
@@ -100,11 +137,27 @@ const AppTasksTaskIdRoute = AppTasksTaskIdRouteImport.update({
   path: '/tasks/$taskId',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsWeatherRoute = AppSettingsWeatherRouteImport.update({
+  id: '/settings/weather',
+  path: '/settings/weather',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRemindersRoute = AppSettingsRemindersRouteImport.update({
+  id: '/settings/reminders',
+  path: '/settings/reminders',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsProfileRoute = AppSettingsProfileRouteImport.update({
   id: '/settings/profile',
   path: '/settings/profile',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsNotificationsRoute =
+  AppSettingsNotificationsRouteImport.update({
+    id: '/settings/notifications',
+    path: '/settings/notifications',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppSettingsMembersRoute = AppSettingsMembersRouteImport.update({
   id: '/settings/members',
   path: '/settings/members',
@@ -113,6 +166,11 @@ const AppSettingsMembersRoute = AppSettingsMembersRouteImport.update({
 const AppSettingsHouseRoute = AppSettingsHouseRouteImport.update({
   id: '/settings/house',
   path: '/settings/house',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSeasonalClosingRoute = AppSeasonalClosingRouteImport.update({
+  id: '/seasonal/closing',
+  path: '/seasonal/closing',
   getParentRoute: () => AppRoute,
 } as any)
 const AppMaintenanceNewRoute = AppMaintenanceNewRouteImport.update({
@@ -125,6 +183,11 @@ const AppMaintenanceIssueIdRoute = AppMaintenanceIssueIdRouteImport.update({
   path: '/maintenance/$issueId',
   getParentRoute: () => AppRoute,
 } as any)
+const AppGalleryPhotoIdRoute = AppGalleryPhotoIdRouteImport.update({
+  id: '/gallery/$photoId',
+  path: '/gallery/$photoId',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCalendarNewRoute = AppCalendarNewRouteImport.update({
   id: '/calendar/new',
   path: '/calendar/new',
@@ -135,50 +198,84 @@ const AppCalendarStayIdRoute = AppCalendarStayIdRouteImport.update({
   path: '/calendar/$stayId',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAssetsNewRoute = AppAssetsNewRouteImport.update({
+  id: '/assets/new',
+  path: '/assets/new',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAssetsAssetIdRoute = AppAssetsAssetIdRouteImport.update({
+  id: '/assets/$assetId',
+  path: '/assets/$assetId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
   '/invite/$membershipId': typeof InviteMembershipIdRoute
+  '/assets/$assetId': typeof AppAssetsAssetIdRoute
+  '/assets/new': typeof AppAssetsNewRoute
   '/calendar/$stayId': typeof AppCalendarStayIdRoute
   '/calendar/new': typeof AppCalendarNewRoute
+  '/gallery/$photoId': typeof AppGalleryPhotoIdRoute
   '/maintenance/$issueId': typeof AppMaintenanceIssueIdRoute
   '/maintenance/new': typeof AppMaintenanceNewRoute
+  '/seasonal/closing': typeof AppSeasonalClosingRoute
   '/settings/house': typeof AppSettingsHouseRoute
   '/settings/members': typeof AppSettingsMembersRoute
+  '/settings/notifications': typeof AppSettingsNotificationsRoute
   '/settings/profile': typeof AppSettingsProfileRoute
+  '/settings/reminders': typeof AppSettingsRemindersRoute
+  '/settings/weather': typeof AppSettingsWeatherRoute
   '/tasks/$taskId': typeof AppTasksTaskIdRoute
   '/tasks/templates': typeof AppTasksTemplatesRoute
   '/tasks/today': typeof AppTasksTodayRoute
+  '/analytics/': typeof AppAnalyticsIndexRoute
   '/announcements/': typeof AppAnnouncementsIndexRoute
+  '/assets/': typeof AppAssetsIndexRoute
   '/calendar/': typeof AppCalendarIndexRoute
   '/contacts/': typeof AppContactsIndexRoute
   '/documents/': typeof AppDocumentsIndexRoute
+  '/gallery/': typeof AppGalleryIndexRoute
   '/maintenance/': typeof AppMaintenanceIndexRoute
+  '/seasonal/': typeof AppSeasonalIndexRoute
   '/settings/': typeof AppSettingsIndexRoute
   '/tasks/': typeof AppTasksIndexRoute
+  '/weather/': typeof AppWeatherIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/invite/$membershipId': typeof InviteMembershipIdRoute
   '/': typeof AppIndexRoute
+  '/assets/$assetId': typeof AppAssetsAssetIdRoute
+  '/assets/new': typeof AppAssetsNewRoute
   '/calendar/$stayId': typeof AppCalendarStayIdRoute
   '/calendar/new': typeof AppCalendarNewRoute
+  '/gallery/$photoId': typeof AppGalleryPhotoIdRoute
   '/maintenance/$issueId': typeof AppMaintenanceIssueIdRoute
   '/maintenance/new': typeof AppMaintenanceNewRoute
+  '/seasonal/closing': typeof AppSeasonalClosingRoute
   '/settings/house': typeof AppSettingsHouseRoute
   '/settings/members': typeof AppSettingsMembersRoute
+  '/settings/notifications': typeof AppSettingsNotificationsRoute
   '/settings/profile': typeof AppSettingsProfileRoute
+  '/settings/reminders': typeof AppSettingsRemindersRoute
+  '/settings/weather': typeof AppSettingsWeatherRoute
   '/tasks/$taskId': typeof AppTasksTaskIdRoute
   '/tasks/templates': typeof AppTasksTemplatesRoute
   '/tasks/today': typeof AppTasksTodayRoute
+  '/analytics': typeof AppAnalyticsIndexRoute
   '/announcements': typeof AppAnnouncementsIndexRoute
+  '/assets': typeof AppAssetsIndexRoute
   '/calendar': typeof AppCalendarIndexRoute
   '/contacts': typeof AppContactsIndexRoute
   '/documents': typeof AppDocumentsIndexRoute
+  '/gallery': typeof AppGalleryIndexRoute
   '/maintenance': typeof AppMaintenanceIndexRoute
+  '/seasonal': typeof AppSeasonalIndexRoute
   '/settings': typeof AppSettingsIndexRoute
   '/tasks': typeof AppTasksIndexRoute
+  '/weather': typeof AppWeatherIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -186,23 +283,35 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/invite/$membershipId': typeof InviteMembershipIdRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/assets/$assetId': typeof AppAssetsAssetIdRoute
+  '/_app/assets/new': typeof AppAssetsNewRoute
   '/_app/calendar/$stayId': typeof AppCalendarStayIdRoute
   '/_app/calendar/new': typeof AppCalendarNewRoute
+  '/_app/gallery/$photoId': typeof AppGalleryPhotoIdRoute
   '/_app/maintenance/$issueId': typeof AppMaintenanceIssueIdRoute
   '/_app/maintenance/new': typeof AppMaintenanceNewRoute
+  '/_app/seasonal/closing': typeof AppSeasonalClosingRoute
   '/_app/settings/house': typeof AppSettingsHouseRoute
   '/_app/settings/members': typeof AppSettingsMembersRoute
+  '/_app/settings/notifications': typeof AppSettingsNotificationsRoute
   '/_app/settings/profile': typeof AppSettingsProfileRoute
+  '/_app/settings/reminders': typeof AppSettingsRemindersRoute
+  '/_app/settings/weather': typeof AppSettingsWeatherRoute
   '/_app/tasks/$taskId': typeof AppTasksTaskIdRoute
   '/_app/tasks/templates': typeof AppTasksTemplatesRoute
   '/_app/tasks/today': typeof AppTasksTodayRoute
+  '/_app/analytics/': typeof AppAnalyticsIndexRoute
   '/_app/announcements/': typeof AppAnnouncementsIndexRoute
+  '/_app/assets/': typeof AppAssetsIndexRoute
   '/_app/calendar/': typeof AppCalendarIndexRoute
   '/_app/contacts/': typeof AppContactsIndexRoute
   '/_app/documents/': typeof AppDocumentsIndexRoute
+  '/_app/gallery/': typeof AppGalleryIndexRoute
   '/_app/maintenance/': typeof AppMaintenanceIndexRoute
+  '/_app/seasonal/': typeof AppSeasonalIndexRoute
   '/_app/settings/': typeof AppSettingsIndexRoute
   '/_app/tasks/': typeof AppTasksIndexRoute
+  '/_app/weather/': typeof AppWeatherIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -210,68 +319,104 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/invite/$membershipId'
+    | '/assets/$assetId'
+    | '/assets/new'
     | '/calendar/$stayId'
     | '/calendar/new'
+    | '/gallery/$photoId'
     | '/maintenance/$issueId'
     | '/maintenance/new'
+    | '/seasonal/closing'
     | '/settings/house'
     | '/settings/members'
+    | '/settings/notifications'
     | '/settings/profile'
+    | '/settings/reminders'
+    | '/settings/weather'
     | '/tasks/$taskId'
     | '/tasks/templates'
     | '/tasks/today'
+    | '/analytics/'
     | '/announcements/'
+    | '/assets/'
     | '/calendar/'
     | '/contacts/'
     | '/documents/'
+    | '/gallery/'
     | '/maintenance/'
+    | '/seasonal/'
     | '/settings/'
     | '/tasks/'
+    | '/weather/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
     | '/invite/$membershipId'
     | '/'
+    | '/assets/$assetId'
+    | '/assets/new'
     | '/calendar/$stayId'
     | '/calendar/new'
+    | '/gallery/$photoId'
     | '/maintenance/$issueId'
     | '/maintenance/new'
+    | '/seasonal/closing'
     | '/settings/house'
     | '/settings/members'
+    | '/settings/notifications'
     | '/settings/profile'
+    | '/settings/reminders'
+    | '/settings/weather'
     | '/tasks/$taskId'
     | '/tasks/templates'
     | '/tasks/today'
+    | '/analytics'
     | '/announcements'
+    | '/assets'
     | '/calendar'
     | '/contacts'
     | '/documents'
+    | '/gallery'
     | '/maintenance'
+    | '/seasonal'
     | '/settings'
     | '/tasks'
+    | '/weather'
   id:
     | '__root__'
     | '/_app'
     | '/login'
     | '/invite/$membershipId'
     | '/_app/'
+    | '/_app/assets/$assetId'
+    | '/_app/assets/new'
     | '/_app/calendar/$stayId'
     | '/_app/calendar/new'
+    | '/_app/gallery/$photoId'
     | '/_app/maintenance/$issueId'
     | '/_app/maintenance/new'
+    | '/_app/seasonal/closing'
     | '/_app/settings/house'
     | '/_app/settings/members'
+    | '/_app/settings/notifications'
     | '/_app/settings/profile'
+    | '/_app/settings/reminders'
+    | '/_app/settings/weather'
     | '/_app/tasks/$taskId'
     | '/_app/tasks/templates'
     | '/_app/tasks/today'
+    | '/_app/analytics/'
     | '/_app/announcements/'
+    | '/_app/assets/'
     | '/_app/calendar/'
     | '/_app/contacts/'
     | '/_app/documents/'
+    | '/_app/gallery/'
     | '/_app/maintenance/'
+    | '/_app/seasonal/'
     | '/_app/settings/'
     | '/_app/tasks/'
+    | '/_app/weather/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -310,6 +455,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InviteMembershipIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/weather/': {
+      id: '/_app/weather/'
+      path: '/weather'
+      fullPath: '/weather/'
+      preLoaderRoute: typeof AppWeatherIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/tasks/': {
       id: '/_app/tasks/'
       path: '/tasks'
@@ -324,11 +476,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/seasonal/': {
+      id: '/_app/seasonal/'
+      path: '/seasonal'
+      fullPath: '/seasonal/'
+      preLoaderRoute: typeof AppSeasonalIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/maintenance/': {
       id: '/_app/maintenance/'
       path: '/maintenance'
       fullPath: '/maintenance/'
       preLoaderRoute: typeof AppMaintenanceIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/gallery/': {
+      id: '/_app/gallery/'
+      path: '/gallery'
+      fullPath: '/gallery/'
+      preLoaderRoute: typeof AppGalleryIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/documents/': {
@@ -352,11 +518,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCalendarIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/assets/': {
+      id: '/_app/assets/'
+      path: '/assets'
+      fullPath: '/assets/'
+      preLoaderRoute: typeof AppAssetsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/announcements/': {
       id: '/_app/announcements/'
       path: '/announcements'
       fullPath: '/announcements/'
       preLoaderRoute: typeof AppAnnouncementsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/analytics/': {
+      id: '/_app/analytics/'
+      path: '/analytics'
+      fullPath: '/analytics/'
+      preLoaderRoute: typeof AppAnalyticsIndexRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/tasks/today': {
@@ -380,11 +560,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTasksTaskIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/weather': {
+      id: '/_app/settings/weather'
+      path: '/settings/weather'
+      fullPath: '/settings/weather'
+      preLoaderRoute: typeof AppSettingsWeatherRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/reminders': {
+      id: '/_app/settings/reminders'
+      path: '/settings/reminders'
+      fullPath: '/settings/reminders'
+      preLoaderRoute: typeof AppSettingsRemindersRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/settings/profile': {
       id: '/_app/settings/profile'
       path: '/settings/profile'
       fullPath: '/settings/profile'
       preLoaderRoute: typeof AppSettingsProfileRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/notifications': {
+      id: '/_app/settings/notifications'
+      path: '/settings/notifications'
+      fullPath: '/settings/notifications'
+      preLoaderRoute: typeof AppSettingsNotificationsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings/members': {
@@ -401,6 +602,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsHouseRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/seasonal/closing': {
+      id: '/_app/seasonal/closing'
+      path: '/seasonal/closing'
+      fullPath: '/seasonal/closing'
+      preLoaderRoute: typeof AppSeasonalClosingRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/maintenance/new': {
       id: '/_app/maintenance/new'
       path: '/maintenance/new'
@@ -413,6 +621,13 @@ declare module '@tanstack/react-router' {
       path: '/maintenance/$issueId'
       fullPath: '/maintenance/$issueId'
       preLoaderRoute: typeof AppMaintenanceIssueIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/gallery/$photoId': {
+      id: '/_app/gallery/$photoId'
+      path: '/gallery/$photoId'
+      fullPath: '/gallery/$photoId'
+      preLoaderRoute: typeof AppGalleryPhotoIdRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/calendar/new': {
@@ -429,49 +644,87 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCalendarStayIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/assets/new': {
+      id: '/_app/assets/new'
+      path: '/assets/new'
+      fullPath: '/assets/new'
+      preLoaderRoute: typeof AppAssetsNewRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/assets/$assetId': {
+      id: '/_app/assets/$assetId'
+      path: '/assets/$assetId'
+      fullPath: '/assets/$assetId'
+      preLoaderRoute: typeof AppAssetsAssetIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppIndexRoute: typeof AppIndexRoute
+  AppAssetsAssetIdRoute: typeof AppAssetsAssetIdRoute
+  AppAssetsNewRoute: typeof AppAssetsNewRoute
   AppCalendarStayIdRoute: typeof AppCalendarStayIdRoute
   AppCalendarNewRoute: typeof AppCalendarNewRoute
+  AppGalleryPhotoIdRoute: typeof AppGalleryPhotoIdRoute
   AppMaintenanceIssueIdRoute: typeof AppMaintenanceIssueIdRoute
   AppMaintenanceNewRoute: typeof AppMaintenanceNewRoute
+  AppSeasonalClosingRoute: typeof AppSeasonalClosingRoute
   AppSettingsHouseRoute: typeof AppSettingsHouseRoute
   AppSettingsMembersRoute: typeof AppSettingsMembersRoute
+  AppSettingsNotificationsRoute: typeof AppSettingsNotificationsRoute
   AppSettingsProfileRoute: typeof AppSettingsProfileRoute
+  AppSettingsRemindersRoute: typeof AppSettingsRemindersRoute
+  AppSettingsWeatherRoute: typeof AppSettingsWeatherRoute
   AppTasksTaskIdRoute: typeof AppTasksTaskIdRoute
   AppTasksTemplatesRoute: typeof AppTasksTemplatesRoute
   AppTasksTodayRoute: typeof AppTasksTodayRoute
+  AppAnalyticsIndexRoute: typeof AppAnalyticsIndexRoute
   AppAnnouncementsIndexRoute: typeof AppAnnouncementsIndexRoute
+  AppAssetsIndexRoute: typeof AppAssetsIndexRoute
   AppCalendarIndexRoute: typeof AppCalendarIndexRoute
   AppContactsIndexRoute: typeof AppContactsIndexRoute
   AppDocumentsIndexRoute: typeof AppDocumentsIndexRoute
+  AppGalleryIndexRoute: typeof AppGalleryIndexRoute
   AppMaintenanceIndexRoute: typeof AppMaintenanceIndexRoute
+  AppSeasonalIndexRoute: typeof AppSeasonalIndexRoute
   AppSettingsIndexRoute: typeof AppSettingsIndexRoute
   AppTasksIndexRoute: typeof AppTasksIndexRoute
+  AppWeatherIndexRoute: typeof AppWeatherIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppIndexRoute: AppIndexRoute,
+  AppAssetsAssetIdRoute: AppAssetsAssetIdRoute,
+  AppAssetsNewRoute: AppAssetsNewRoute,
   AppCalendarStayIdRoute: AppCalendarStayIdRoute,
   AppCalendarNewRoute: AppCalendarNewRoute,
+  AppGalleryPhotoIdRoute: AppGalleryPhotoIdRoute,
   AppMaintenanceIssueIdRoute: AppMaintenanceIssueIdRoute,
   AppMaintenanceNewRoute: AppMaintenanceNewRoute,
+  AppSeasonalClosingRoute: AppSeasonalClosingRoute,
   AppSettingsHouseRoute: AppSettingsHouseRoute,
   AppSettingsMembersRoute: AppSettingsMembersRoute,
+  AppSettingsNotificationsRoute: AppSettingsNotificationsRoute,
   AppSettingsProfileRoute: AppSettingsProfileRoute,
+  AppSettingsRemindersRoute: AppSettingsRemindersRoute,
+  AppSettingsWeatherRoute: AppSettingsWeatherRoute,
   AppTasksTaskIdRoute: AppTasksTaskIdRoute,
   AppTasksTemplatesRoute: AppTasksTemplatesRoute,
   AppTasksTodayRoute: AppTasksTodayRoute,
+  AppAnalyticsIndexRoute: AppAnalyticsIndexRoute,
   AppAnnouncementsIndexRoute: AppAnnouncementsIndexRoute,
+  AppAssetsIndexRoute: AppAssetsIndexRoute,
   AppCalendarIndexRoute: AppCalendarIndexRoute,
   AppContactsIndexRoute: AppContactsIndexRoute,
   AppDocumentsIndexRoute: AppDocumentsIndexRoute,
+  AppGalleryIndexRoute: AppGalleryIndexRoute,
   AppMaintenanceIndexRoute: AppMaintenanceIndexRoute,
+  AppSeasonalIndexRoute: AppSeasonalIndexRoute,
   AppSettingsIndexRoute: AppSettingsIndexRoute,
   AppTasksIndexRoute: AppTasksIndexRoute,
+  AppWeatherIndexRoute: AppWeatherIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
